@@ -52,23 +52,19 @@ params = {
 
 # get average complete synchronization
 params['solver']['measure_type'] = 'sync_c'
-looper = wrap_looper(PhysRevLett111_103605, params, 'mav', 'x_looper')
+looper = wrap_looper(SystemClass=PhysRevLett111_103605, params=params, func='mav', looper='x_looper')
 Sync_c_avg = looper.results['V']
 
 # get average phase synchronization
 params['solver']['measure_type'] = 'sync_p'
-looper = wrap_looper(PhysRevLett111_103605, params, 'mav', 'x_looper')
+looper = wrap_looper(SystemClass=PhysRevLett111_103605, params=params, func='mav', looper='x_looper')
 Sync_p_avg = looper.results['V']
 
 # plotter
 X = looper.axes['X']['val']
-axes = {
+plotter = MPLPlotter(axes={
     'X': X,
-    'Y': {
-        'var': 'QCM',
-        'val': ['$\\bar{S}_{c}$', '$\\bar{S}_{p}$'],
-    }
-}
-plotter = MPLPlotter(axes, params['plotter'])
+    'Y': ['$\\bar{S}_{c}$', '$\\bar{S}_{p}$']
+}, params=params['plotter'])
 plotter.update(xs=[X, X], vs=[Sync_c_avg, Sync_p_avg])
 plotter.show(True)

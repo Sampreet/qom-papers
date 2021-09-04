@@ -45,16 +45,16 @@ params = {
 init_log()
 
 # initialize system
-system = PhysRevLett103_213603(params['system'])
+system = PhysRevLett103_213603(params=params['system'])
 
 # get measure dynamics
-M, T = system.get_measure_dynamics(params['solver'])
+M, T = system.get_measure_dynamics(solver_params=params['solver'])
 qs = np.real(np.transpose(M)[0]).tolist()
 ps = np.imag(np.transpose(M)[0]).tolist()
 
 # plotter
-plotter = MPLPlotter({
+plotter = MPLPlotter(axes={
     'X': qs
-}, params['plotter'])
+}, params=params['plotter'])
 plotter.update(xs=qs, vs=ps)
 plotter.show(True)

@@ -44,20 +44,20 @@ params = {
 init_log()
 
 # initialize system
-system = PhysRevLett103_213603(params['system'])
+system = PhysRevLett103_213603(params=params['system'])
 
 # get measure dynamics without modulation
 system.params['P_1'] = 0.0
-M_0, T = system.get_measure_dynamics(params['solver'])
+M_0, T = system.get_measure_dynamics(solver_params=params['solver'])
 
 # get measure dynamics with modulation
 system.params['P_1'] = 2e-3
-M_1, T = system.get_measure_dynamics(params['solver'])
+M_1, T = system.get_measure_dynamics(solver_params=params['solver'])
 
 # plotter
-plotter = MPLPlotter({
+plotter = MPLPlotter(axes={
     'X': T,
     'Y': [0, 2]
-}, params['plotter'])
+}, params=params['plotter'])
 plotter.update(xs=[T, T], vs=[M_0, M_1])
 plotter.show(True)

@@ -7,6 +7,7 @@ params = {
         'show_progress': True,
         'cache': True,
         'method': 'zvode',
+        'mode_type': 'optical',
         't_min': 0.0,
         't_max': 4.0,
         't_dim': 401

@@ -44,25 +44,25 @@ params = {
 init_log()
 
 # initialize system
-system = PhysRevLett111_103605(params['system'])
+system = PhysRevLett111_103605(params=params['system'])
 
 # get complete synchronization
 params['solver']['measure_type'] = 'sync_c'
-M_0, T = system.get_measure_dynamics(params['solver'])
+M_0, T = system.get_measure_dynamics(solver_params=params['solver'])
 sync_c_avg = np.mean(M_0[371:])
 # get phase synchronization
 params['solver']['measure_type'] = 'sync_p'
-M_1, T = system.get_measure_dynamics(params['solver'])
+M_1, T = system.get_measure_dynamics(solver_params=params['solver'])
 sync_p_avg = np.mean(M_1[371:])
 
 # plotter
-plotter = MPLPlotter({
+plotter = MPLPlotter(axes={
     'X': T,
     'Y': {
         'var': 'M',
         'val': [0, 2]
     }
-}, params['plotter'])
+}, params=params['plotter'])
 axis = plotter.get_current_axis()
 axis.plot([sync_c_avg for i in range(len(T))], linestyle='--', color='b')
 axis.plot([sync_p_avg for i in range(len(T))], linestyle='--', color='g')

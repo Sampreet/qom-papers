@@ -1,5 +1,10 @@
 # Changelog
 
+## 2021/09/04 - 00 - Added Chaos Papers
+> Toolbox version 0.8.0
+* Updated templates and added scripts for new systems.
+* Added systems for New J. Phys. **22**, 013049 (2020) and Phys. Rev. Lett. **114**, 013601 (2015).
+
 ## 2021/08/30 - 00 - Version Upgrade
 > Toolbox version 0.8.0
 * Restructured all files for GUI compatibility.

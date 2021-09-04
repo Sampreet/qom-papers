@@ -39,7 +39,6 @@ params = {
     'plotter': {
         'type': 'pcolormesh',
         'palette': 'Greens',
-        'bins': 11,
         'title': '$\\Delta = \\omega_{LC}$',
         'x_label': '$g / \\kappa$',
         'x_ticks': [0, 3, 6],

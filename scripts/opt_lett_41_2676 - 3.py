@@ -29,14 +29,11 @@ params = {
     'plotter': {
         'type': 'surface_cz',
         'x_label': '$x$',
-        'x_bound': 'both',
         'x_ticks': [0, 150, 300],
         'y_label': '$\\tau$',
-        'y_bound': 'both',
         'y_ticks': [0, np.pi / 2, np.pi, 4],
         'y_tick_labels': ['0', '$\\pi / 2$', '$\\pi$', ''],
         'v_label': '$|\\alpha| (10^{3})$',
-        'v_bound': 'both',
         'v_ticks': [0, 1000, 2000],
         'v_tick_labels': [0, 1, 2],
         'show_cbar': False,
@@ -48,7 +45,7 @@ params = {
 init_log()
 
 # initialize system
-system = OptLett41_2676(params['system'])
+system = OptLett41_2676(params=params['system'])
 
 # get mode amplitude dynamics
 amps, T, X = system.get_mode_amplitude_dynamics(solver_params=params['solver'], plot=True, plotter_params=params['plotter'])

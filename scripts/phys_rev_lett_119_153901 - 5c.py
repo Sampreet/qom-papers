@@ -26,11 +26,9 @@ params = {
     'plotter': {
         'type': 'pcolormesh',
         'x_label': '$x$',
-        'x_bound': 'both',
         'x_ticks': [0, 200, 400],
         'x_tick_labels': [-1, 0, 1],
         'y_label': '$\\tau$',
-        'y_bound': 'both',
         'y_ticks': [0, 2, 4],
         'show_cbar': True,
         'cbar_title': '$|\\alpha| (10^{3})$',
@@ -43,6 +41,6 @@ params = {
 init_log()
 
 # initialize system
-system = PhysRevLett119_153901(params['system'])
+system = PhysRevLett119_153901(params=params['system'])
 # get mode amplitude dynamics
 amps, T, X = system.get_mode_amplitude_dynamics(solver_params=params['solver'], plot=True, plotter_params=params['plotter'])
