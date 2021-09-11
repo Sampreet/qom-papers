@@ -1,5 +1,9 @@
 # Changelog
 
+## 2021/09/11 - 00 - Updated Stability Zone
+> Toolbox version 0.8.0
+* Updated stability zone calculation functions for New J. Phys. **22**, 013049 (2020).
+
 ## 2021/09/04 - 00 - Added Chaos Papers
 > Toolbox version 0.8.0
 * Updated templates and added scripts for new systems.

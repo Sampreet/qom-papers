@@ -3,7 +3,6 @@ import os
 import sys
 
 # qom modules
-from qom.ui.plotters import MPLPlotter
 from qom.utils.looper import wrap_looper
 
 # add path to local libraries
@@ -25,7 +24,7 @@ params = {
             'min': -4,
             'max': 0,
             'scale': 'log',
-            'dim': 401
+            'dim': 201
         }
     },
     'solver': {},
@@ -47,11 +46,9 @@ params = {
         'cbar_title': 'Stability Zone of $\\left| \\alpha \\right|^{2}$',
         'cbar_position': 'top',
         'cbar_ticks': [1, 2, 3, 4],
-        'cbar_tick_labels': ['1S0U', '0S1U', '1S2U', '2S1U'],
-        'label_font_size': 22,
-        'tick_font_size': 18
+        'cbar_tick_labels': ['1S0U', '0S1U', '1S2U', '2S1U']
     }
 }
 
 # wrapper
-looper = wrap_looper(SystemClass=NewJPhys22_013049, params=params, func='optical_stability_zone', looper='xy_looper', file_path='data/new_j_phys_22_013049/optical_stability_zone', plot=True)
+looper = wrap_looper(SystemClass=NewJPhys22_013049, params=params, func='osz', looper='xy_looper', file_path='data/new_j_phys_22_013049/optical_stability_zone', plot=True)

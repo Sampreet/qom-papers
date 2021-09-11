@@ -5,7 +5,7 @@
 
 __authors__ = ['Sampreet Kalita']
 __created__ = '2021-07-27'
-__updated__ = '2021-09-03'
+__updated__ = '2021-09-07'
 __version__ = '0.8.0'
 
 # dependencies
@@ -165,10 +165,10 @@ class NewJPhys22_013049(SOSMSystem):
         # noise correlation matrix
         D = np.zeros(dim, dtype=np.float_)
         for i in range(2):
-            D[0][0] = kappa_norm
-            D[1][1] = kappa_norm
-            D[2][2] = gamma_norm
-            D[3][3] = gamma_norm
+            D[0][0] = kappa_norm / 2
+            D[1][1] = kappa_norm / 2
+            D[2][2] = gamma_norm / 2
+            D[3][3] = gamma_norm / 2
         
         # constant parameters
         params = [Delta_norm, gamma_norm, kappa_norm, P]
@@ -224,8 +224,8 @@ class NewJPhys22_013049(SOSMSystem):
         -------
         A_l : float
             Amplitude of the laser.
-        Delta : float
-            Effective detuning if method is "basic", else detuning of the laser.
+        Delta_norm : float
+            Detuning of the laser.
         kappa : float
             Optical decay rate.
         C : float
@@ -243,9 +243,9 @@ class NewJPhys22_013049(SOSMSystem):
         # Coefficient of the mean optical occupancies
         C = 4 * P / (gamma_norm**2 + 4)
 
-        return 0.5, Delta_norm, kappa_norm, C
+        return A_l, Delta_norm, kappa_norm, C
 
-    def get_ss_modes(self, params):
+    def get_oss_modes(self, params):
         """Method to obtain the steady state optical and mechanical mode apmlitudes.
         
         Parameters
@@ -255,27 +255,30 @@ class NewJPhys22_013049(SOSMSystem):
         
         Returns 
         -------
-        modes : list
+        Modes : list
             Optical and mechanical mode amplitudes.
         """
         
         # frequently used variables
         Delta_norm, gamma_norm, kappa_norm, P = params
 
-        # optical mode occupancy
-        N_o, _ = self.get_mean_optical_occupancies()
-        n_o = N_o[0] if len(N_o) == 1 else N_o[1]
+        # initialize lists
+        Modes = list()
 
-        # mechanical mode position
-        beta_real = 2 * P / (gamma_norm**2 + 4) * n_o
+        # get mean optical occupancies
+        N_os, _ = self.get_mean_optical_occupancies()
+        # for each mean optical occupancy
+        for N_o in N_os:
+            # mechanical mode position
+            beta_real = 2 * P / (gamma_norm**2 + 4) * N_o
 
-        # mode amplitudes
-        alpha = 1 / (kappa_norm - 2j * (Delta_norm + 2 * beta_real))
-        beta = P * n_o * (2 + 1j * gamma_norm) / (gamma_norm**2 + 4)
+            # calculate mode amplitudes
+            alpha = 1 / (kappa_norm - 2j * (Delta_norm + 2 * beta_real))
+            beta = P * N_o * (2 + 1j * gamma_norm) / (gamma_norm**2 + 4)
 
-        # list of mode amplitudes
-        modes = [alpha, beta]
+            # append to list
+            Modes.append([alpha, beta])
 
-        return modes
+        return Modes
 
 
