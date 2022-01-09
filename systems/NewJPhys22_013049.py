@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
  
-"""Class to simulate the systems described in New. J. Phys. **22**, 013049 (2020)."""
+"""Class to simulate the systems described in New J. Phys. **22**, 013049 (2020)."""
 
 __authors__ = ['Sampreet Kalita']
 __created__ = '2021-07-27'
-__updated__ = '2021-09-07'
+__updated__ = '2021-10-28'
 __version__ = '0.8.0'
 
 # dependencies
@@ -15,7 +15,7 @@ import numpy as np
 from qom.systems import SOSMSystem
 
 class NewJPhys22_013049(SOSMSystem):
-    """Class to simulate the OM system in New. J. Phys. **22**, 013049 (2020).
+    """Class to simulate the OM system in New J. Phys. **22**, 013049 (2020).
 
     Parameters
     ----------
@@ -33,7 +33,7 @@ class NewJPhys22_013049(SOSMSystem):
 
         # set attributes
         self.code = 'new_j_phys_22_013049'
-        self.name = 'OM System New. J. Phys. **22**, 013049 (2020)'  
+        self.name = 'OM System in New J. Phys. **22**, 013049 (2020)'  
         # default parameters
         self.params = {
             'Delta_norm': params.get('Delta_norm', 0.0),

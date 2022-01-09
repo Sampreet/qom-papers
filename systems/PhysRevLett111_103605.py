@@ -36,7 +36,7 @@ R. Fazio        NEST, Scuola Normale Superiore and Istituto Nanoscienze-CNR, I-5
 
 __authors__ = ['Sampreet Kalita']
 __created__ = '2021-05-18'
-__updated__ = '2021-08-30'
+__updated__ = '2021-10-28'
 __version__ = '0.8.0'
 
 # dependencies
@@ -73,7 +73,7 @@ class PhysRevLett111_103605(DODMSystem):
             'kappa': params.get('kappa', 0.15),
             'mu': params.get('mu', 0.02),
             'n_b': params.get('n_b', 0),
-            'omega_1': params.get('omega_1', 1),
+            'omega_1': params.get('omega_1', 1.0),
             'omega_2': params.get('omega_2', 1.005)
         }
 
@@ -151,6 +151,7 @@ class PhysRevLett111_103605(DODMSystem):
 
         c : list
             Constant parameters of the system.
+            First (2*2)^2 elements contain the noise matrix.
             First two elements contain the laser detunings.
             Next element contains the laser amplitude.
             Next element contains the optomechanical coupling strength.

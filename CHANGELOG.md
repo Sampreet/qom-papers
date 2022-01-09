@@ -1,11 +1,16 @@
 # Changelog
 
+## 2022/01/09 - 00 - Added Squeezing Paper
+> Toolbox version 0.8.2
+* Updated structure for `gui_templates` and `scripts`.
+* Added plots for Phys. Rev. A **101**, 053836 (2020).
+
 ## 2021/09/11 - 00 - Updated Stability Zone
 > Toolbox version 0.8.0
 * Updated stability zone calculation functions for New J. Phys. **22**, 013049 (2020).
 
 ## 2021/09/04 - 00 - Added Chaos Papers
-> Toolbox version 0.8.0
+> Toolbox version 0.8.0q
 * Updated templates and added scripts for new systems.
 * Added systems for New J. Phys. **22**, 013049 (2020) and Phys. Rev. Lett. **114**, 013601 (2015).
 

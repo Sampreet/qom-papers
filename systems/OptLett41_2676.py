@@ -5,7 +5,7 @@
 
 __authors__ = ['Sampreet Kalita']
 __created__ = '2021-08-15'
-__updated__ = '2021-08-30'
+__updated__ = '2021-10-20'
 __version__ = '0.8.0'
 
 # dependencies
@@ -47,7 +47,7 @@ class OptLett41_2676(SOMASystem):
             'Omega': params.get('Omega', 1.0),
             'x_0': params.get('x_0', 10.0),
             'n_solitons': params.get('n_solitons', 1),
-            'dist_norm': params.get('dist_norm', 0),
+            'dist_norm': params.get('dist_norm', 0.0),
             'phi': params.get('phi', 0.0),
             'order': params.get('order', 1)
         }

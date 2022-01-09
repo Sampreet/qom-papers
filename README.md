@@ -1,6 +1,18 @@
 # Quantum Optomechanics Papers
 
-> A collection of solved papers using [The Quantum Optomechanics Toolbox](https://github.com/Sampreet/qom).
+> A Collection of Solved Papers using [The Quantum Optomechanics Toolbox](https://github.com/Sampreet/qom).
+
+## List of Solved Papers
+
+* J. Opt. Soc. Am. B **33**, 1335 (2016)
+* [New J. Phys. **22**, 013049](https://doi.org/10.1088/1367-2630/ab6522) (2020)
+* [New J. Phys. **22**, 063041](https://doi.org/10.1088/1367-2630/ab90d2) (2020)
+* [Opt. Lett. **41**, 2676](https://doi.org/10.1364/OL.41.002676) (2016)
+* [Phys. Rev. A **101**, 053836](https://doi.org/10.1103/PhysRevA.101.053836) (2020)
+* [Phys. Rev. Lett. **103**, 213603](https://doi.org/10.1103/PhysRevLett.103.213603) (2009)
+* [Phys. Rev. Lett. **111**, 103605](https://doi.org/10.1103/PhysRevLett.111.103605) (2013)
+* [Phys. Rev. Lett. **114**, 013601](https://doi.org/10.1103/PhysRevLett.114.013601) (2015)
+* [Phys. Rev. Lett. **119**, 153901](https://doi.org/10.1103/PhysRevLett.119.153901) (2017)
 
 ## Structure of the Repository
 
@@ -8,16 +20,26 @@
 ROOT_DIR/
 |
 ├───gui_templates/
-│   ├───foo_bar.py
+│   ├───foo/
+│   │   ├───bar.py
+│   │   └───...
+│   └───...
+|
+├───notebooks/
+│   ├───foo/
+│   │   ├───bar.ipynb
+│   │   └───...
 │   └───...
 |
 │───scripts/
-│   ├───foo_bar.py
+│   ├───foo/
+│   │   ├───bar.py
+│   │   └───...
 │   └───...
 |
 ├───systems/
 │   ├───__init__.py
-│   ├───FooBar.py
+│   ├───Foo.py
 │   └───...
 │
 ├───.gitignore
@@ -46,7 +68,7 @@ This project uses [The Quantum Optomechanics Toolbox](https://github.com/Sampree
 pip install -i https://test.pypi.org/simple/ qom
 ```
 
-Alternatively, [clone](https://github.com/Sampreet/qom) or [download](https://github.com/Sampreet/qom/archive/refs/heads/master.zip) as `.zip` and extract the contents:
+Alternatively, [clone the repository](https://github.com/Sampreet/qom) or [download the sources](https://github.com/Sampreet/qom/archive/refs/heads/master.zip) as `.zip` and extract the contents.
 Now, execute the following from *outside* the top-level directory, `ROOT_DIR`, inside which `setup.py` is located:
 
 ```bash
@@ -66,7 +88,7 @@ Here, `foo_bar.py` is the name of the script.
 To run in GUI mode using `PowerShell` or `bash`, navigate to `ROOT_DIR` and execute:
 
 ```bash
-python -c 'from qom.ui import run; run()'
+python -c 'from qom.ui.gui import run; run()'
 ```
 
-Alternatively, run `GUI.py`.
+Alternatively, run `GUI.py` from within the directory.
