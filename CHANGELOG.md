@@ -1,5 +1,10 @@
 # Changelog
 
+## 2022/07/25 - 00 - Version Upgrade
+> Toolbox version 0.8.5
+* Updated all systems and scripts.
+* Updated `README`.
+
 ## 2022/01/09 - 00 - Added Squeezing Paper
 > Toolbox version 0.8.2
 * Updated structure for `gui_templates` and `scripts`.
