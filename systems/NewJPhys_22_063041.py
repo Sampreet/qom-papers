@@ -31,19 +31,18 @@ Simon Groblacher    Delft University of Technology, 2628CJ Delft, The Netherland
 """
 
 __authors__ = ['Sampreet Kalita']
+__toolbox__ = 'qom-v1.0.0'
 __created__ = '2021-05-15'
-__updated__ = '2022-07-24'
-__version__ = '0.8.5'
-
+__updated__ = '2023-07-07'
 
 # dependencies
 import numpy as np
 import scipy.constants as sc
 
 # qom modules
-from qom.systems import SODMSystem
+from qom.systems import BaseSystem
 
-class NewJPhys_22_063041(SODMSystem):
+class NewJPhys_22_063041(BaseSystem):
     r"""Class to simulate the hybrid OEM system in New J. Phys. **22**, 063041 (2020).
 
     Parameters
@@ -53,23 +52,23 @@ class NewJPhys_22_063041(SODMSystem):
         ============    ========================================================
         key             meaning
         ============    ========================================================
-        Delta_norm      (float) normalized laser detuning :math:`\Delta / \omega_{m}` when ``t_Delta`` is "absolute" and :math:`\Delta / \omega_{LC}` when ``t_Delta`` is "relative". Default is :math:`1.0`.
-        G_norm          (float) normalized effective optomechanical coupling strength :math:`G / \kappa`. Default is :math:`3.0`.
-        g_norm          (float) normalized effective electromechanical coupling strength :math:`g / \kappa`. Default is :math:`3.0`.
-        gamma_LC_norm   (float) normalized LC circuit damping rate :math:`\gamma_{LC} / \omega_{LC}`. Default is :math:`10^{-5}`.
-        gamma_m_norm    (float) normalized mechanical damping rate :math:`\gamma_{m} / \omega_{m}`. Default is :math:`10^{-6}`.
-        kappa_norm      (float) normalized optical decay rate :math:`\kappa / \omega_{m}`. Default is :math:`0.1`.
-        omega_LC_norm   (float) normalized LC circuit frequency :math:`\omega_{LC} / \omega_{m}`. Default is :math:`1.0`.
-        omega_m         (float) mechanical frequency :math:`\omega_{m}`. 
-        T_LC            (float) LC circuit bath temperature :math:`T_{LC}`. Default is :math:`10^{-2}`.
-        T_m             (float) mechanical bath temperature :math:`T_{m}`. Default is :math:`10^{-2}`.
-        t_Delta         (float) type of :math:`\Delta`. Options are "absolute" when normalized by :math:`\omega_{m}` and "relative" when normalized by :math:`\omega_{LC}`. Default is "absolute". 
+        Delta_norm      (*float*) normalized laser detuning :math:`\Delta / \omega_{m}` when `t_Delta` is "absolute" and :math:`\Delta / \omega_{LC}` when `t_Delta` is "relative". Default is :math:`1.0`.
+        G_norm          (*float*) normalized effective optomechanical coupling strength :math:`G / \kappa`. Default is :math:`3.0`.
+        g_norm          (*float*) normalized effective electromechanical coupling strength :math:`g / \kappa`. Default is :math:`3.0`.
+        gamma_LC_norm   (*float*) normalized LC circuit damping rate :math:`\gamma_{LC} / \omega_{LC}`. Default is :math:`10^{-5}`.
+        gamma_m_norm    (*float*) normalized mechanical damping rate :math:`\gamma_{m} / \omega_{m}`. Default is :math:`10^{-6}`.
+        kappa_norm      (*float*) normalized optical decay rate :math:`\kappa / \omega_{m}`. Default is :math:`0.1`.
+        omega_LC_norm   (*float*) normalized LC circuit frequency :math:`\omega_{LC} / \omega_{m}`. Default is :math:`1.0`.
+        omega_m         (*float*) mechanical frequency :math:`\omega_{m}`. 
+        T_LC            (*float*) LC circuit bath temperature :math:`T_{LC}`. Default is :math:`10^{-2}`.
+        T_m             (*float*) mechanical bath temperature :math:`T_{m}`. Default is :math:`10^{-2}`.
+        t_Delta         (*float*) type of :math:`\Delta`. Options are `"absolute"` when normalized by :math:`\omega_{m}` and `"relative"` when normalized by :math:`\omega_{LC}`. Default is `"absolute"`. 
         ============    ========================================================
-    cb_update : callable, optional
-        Callback function to update status and progress, formatted as ``cb_update(status, progress, reset)``, where ``status`` is a string, ``progress`` is an integer and ``reset`` is a boolean.
+    cb_update : *callable*, optional
+        Callback function to update status and progress, formatted as `cb_update(status, progress, reset)`, where `status` is a string, `progress` is a float and `reset` is a boolean.
     """
 
-    # default system parameters
+    # default parameters of the system
     system_defaults = {
         'Delta_norm'    : 1.0,
         'G_norm'        : 3.0,
@@ -78,7 +77,7 @@ class NewJPhys_22_063041(SODMSystem):
         'gamma_m_norm'  : 1e-6,
         'kappa_norm'    : 0.1,
         'omega_LC_norm' : 1.0,
-        'omega_m'       : 2 * np.pi * 1e6,
+        'omega_m'       : 2.0 * np.pi * 1e6,
         'T_LC'          : 1e-2,
         'T_m'           : 1e-2,
         't_Delta'       : 'absolute'
@@ -88,81 +87,100 @@ class NewJPhys_22_063041(SODMSystem):
         """Class constructor for NewJPhys_22_063041."""
         
         # initialize super class
-        super().__init__(params=params, cb_update=cb_update)
+        super().__init__(
+            params=params,
+            name='NewJPhys_22_063041',
+            desc='Hybrid System in New J. Phys. 22, 063041',
+            num_modes=3,
+            cb_update=cb_update
+        )
 
-        # set attributes
-        self.code = 'newjphys_22_063041'
-        self.name = 'Hybrid System in New J. Phys. 22, 063041'  
-
-        # update parameters
-        self.params = dict()
-        for key in self.system_defaults:
-            self.params[key] = params.get(key, self.system_defaults[key])
-
-        # matrices
-        self.A = None
-
-    def get_A(self, modes, params, t):
-        """Function to obtain the drift matrix.
+    def get_A(self, modes, c, t):
+        """Method to obtain the drift matrix.
 
         Parameters
         ----------
-        modes : list
-            Values of the modes.
-        params : list
-            Constants parameters.
-        t : float
-            Time at which the drift matrix is calculated.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
         
         Returns
         -------
-        A : list
+        A : *numpy.ndarray*
             Drift matrix.
         """
 
         # extract frequently used variables
-        Delta, G, g = params[0:3]
-        gamma_LC,  gamma_m, kappa = params[3:6]
-        omega_LC_prime, omega_m = params[6:8]
-
-        # drift matrix
-        if self.A is None or np.shape(self.A) != (6, 6):
-            self.A = np.zeros([6, 6], dtype=np.float_)
+        Delta, G, g                 = c[0:3]
+        gamma_LC, gamma_m, kappa    = c[3:6]
+        omega_LC_prime, omega_m     = c[6:8]
+        
         # optical quadratures
-        self.A[0][0] = - kappa
-        self.A[0][1] = Delta
-        self.A[1][0] = - Delta
-        self.A[1][1] = - kappa
-        self.A[1][2] = G
+        self.A[0][0]    = - kappa
+        self.A[0][1]    = Delta
+        self.A[1][0]    = - Delta
+        self.A[1][1]    = - kappa
+        self.A[1][2]    = G
         # first mechanical mode quadratures
-        self.A[2][3] = omega_m
-        self.A[3][0] = G
-        self.A[3][2] = - omega_m
-        self.A[3][3] = - gamma_m
-        self.A[3][4] = - g
+        self.A[2][3]    = omega_m
+        self.A[3][0]    = G
+        self.A[3][2]    = - omega_m
+        self.A[3][3]    = - gamma_m
+        self.A[3][4]    = - g
         # second mechanical mode quadratures
-        self.A[4][5] = omega_LC_prime
-        self.A[5][2] = - g
-        self.A[5][4] = - omega_LC_prime
-        self.A[5][5] = - gamma_LC
+        self.A[4][5]    = omega_LC_prime
+        self.A[5][2]    = - g
+        self.A[5][4]    = - omega_LC_prime
+        self.A[5][5]    = - gamma_LC
 
         return self.A
-
-    def get_ivc(self):
-        r"""Function to obtain the initial values and constants required for the IVP.
+    
+    def get_D(self, modes, corrs, c, t):
+        """Method to obtain the noise matrix.
+        
+        Parameters
+        ----------
+        modes : *numpy.ndarray*
+            Classical modes.
+        corrs : *numpy.ndarray*
+            Quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
         
         Returns
         -------
-        iv : list
-            Initial values of variables.
-            First element contains the optical mode amplitude.
-            Next element contains the mechanical mode amplitude.
-            Next :math:`4 \times 3^{2}` elements contain the correlations.
+        D : *numpy.ndarray*
+            Noise matrix.
+        """
 
-        c : list
-            Constants of the IVP.
-            First :math:`4 \times 3^{2}` elements contain the noise matrix.
-            Rest of the elements contain the system parameters ``params`` in the following order:
+        # extract frequently used variables
+        gamma_LC, gamma_m, kappa    = c[3:6]
+        n_LC, n_m                   = c[8:10]
+
+        # update drift matrix
+        self.D[0][0] = kappa
+        self.D[1][1] = kappa
+        self.D[3][3] = gamma_m * (2.0 * n_m + 1.0)
+        self.D[5][5] = gamma_LC * (2.0 * n_LC + 1.0)
+
+        return self.D
+
+    def get_ivc(self):
+        r"""Method to obtain the initial values of the modes, correlations and derived constants and controls.
+        
+        Returns
+        -------
+        iv_modes : *numpy.ndarray*
+            Initial values of the classical modes.
+        iv_corrs : *numpy.ndarray*
+            Initial values of the quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls in the following order:
             ========    =============================================
             index       parameter
             ========    =============================================
@@ -174,6 +192,8 @@ class NewJPhys_22_063041(SODMSystem):
             5           optical decay rate :math:`\kappa`.
             6           effective LC circuit frequency :math:`\omega_{LC}^{\prime}`.
             7           mechanical frequency :math:`\omega_{m}`.
+            8           LC circuit quanta :math:`n_{LC}`.
+            9           mechanical quanta :math:`n_{m}`.
             ========    =============================================
         """
 
@@ -206,8 +226,6 @@ class NewJPhys_22_063041(SODMSystem):
         gamma_LC= gamma_LC_norm * omega_LC
         gamma_m = gamma_m_norm * omega_m
         kappa   = kappa_norm * omega_m
-        n_LC    = sc.k * T_LC / sc.hbar / omega_LC
-        n_m     = sc.k * T_m / sc.hbar / omega_m
 
         # effective cavity-laser detuning
         if t_Delta == 'relative':
@@ -218,33 +236,21 @@ class NewJPhys_22_063041(SODMSystem):
         omega_LC = omega_LC_norm * omega_m
         # effective LC frequency
         omega_LC_prime = omega_LC
- 
-        # initial mode values as 1D list
-        modes_0 = np.zeros(3, dtype=np.complex_).tolist()
 
-        # initial quadrature correlations
-        corrs_0 = np.zeros([6, 6], dtype=np.float_)
-        corrs_0[0][0] = 1/2 
-        corrs_0[1][1] = 1/2
-        corrs_0[2][2] = (n_m + 1/2)
-        corrs_0[3][3] = (n_LC + 1/2)
+        # LC circuit and mechanical quanta
+        n_LC    = sc.k * T_LC / sc.hbar / omega_LC
+        n_m     = sc.k * T_m / sc.hbar / omega_m
 
-        # convert to 1D list and concatenate all variables
-        iv = modes_0 + [np.complex_(element) for element in corrs_0.flatten()]
-
-        # noise correlation matrix
-        D = np.zeros([6, 6], dtype=np.float_)
-        D[0][0] = kappa
-        D[1][1] = kappa
-        D[3][3] = gamma_m * (2 * n_m + 1)
-        D[5][5] = gamma_LC * (2 * n_LC + 1)
+        # initial values of the correlations
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs[0][0]  = 0.5 
+        iv_corrs[1][1]  = 0.5
+        iv_corrs[2][2]  = n_m + 0.5
+        iv_corrs[3][3]  = n_m + 0.5
+        iv_corrs[4][4]  = n_LC + 0.5
+        iv_corrs[5][5]  = n_LC + 0.5
         
-        # constant parameters
-        params = [Delta, G, g] + \
-            [gamma_LC, gamma_m, kappa] + \
-            [omega_LC_prime, omega_m]
+        # derived constants
+        c = np.array([Delta, G, g, gamma_LC, gamma_m, kappa, omega_LC_prime, omega_m, n_LC, n_m], dtype=np.float_)
 
-        # all constants
-        c = D.flatten().tolist() + params
-
-        return iv, c
+        return None, iv_corrs, c

@@ -4,51 +4,57 @@ import os
 import sys
 
 # qom modules
+from qom.solvers.deterministic import HLESolver
 from qom.ui import init_log
+from qom.ui.plotters import MPLPlotter
 
 # add path to local libraries
-sys.path.append(os.path.abspath(os.path.join('..', 'qom-papers')))
+sys.path.append(os.path.abspath(os.path.join('.')))
 # import system
 from systems import OptLett_41_2676
 
+# frequently used variables
+n = 300
+
 # all parameters
 params = {
-    'solver': {
-        'show_progress': True,
-        'cache': True,
-        'method': 'zvode',
-        't_min': 0.00,
-        't_max': 4.00,
-        't_dim': 401
+    'solver'    : {
+        'show_progress' : True,
+        'cache'         : False,
+        'ode_method'    : 'vode',
+        't_min'         : 0.00,
+        't_max'         : 4.00,
+        't_dim'         : 401,
+        'indices'       : list(range(0, 2 * n, 2))
     },
-    'system': {
-        'n': 301,
-        'Gamma_m': 0.0,
-        'g_0': 1e-4,
-        'gamma': 0.0,
-        'J': 2.0,
-        'Omega': 1.0,
-        'x_0': 20.0,
-        'n_solitons': 1,
-        'dist_norm': 0.0,
-        'phi': 0.0,
-        'order': 2
+    'system'    : {
+        'n'             : n,
+        'Gamma_m'       : 0.0,
+        'g_0'           : 1e-4,
+        'gamma'         : 0.0,
+        'J'             : 2.0,
+        'Omega'         : 1.0,
+        'x_0'           : 20.0,
+        'n_solitons'    : 1,
+        'dist_norm'     : 0.0,
+        'phi'           : 0.0,
+        'order'         : 2
     },
-    'plotter': {
-        'type': 'surface_cz',
-        'x_label': '$x$',
-        'x_tick_pad': 2,
-        'x_ticks': [0, 150, 300],
-        'y_label': '$\\tau$',
-        'y_tick_pad': 2,
-        'y_ticks': [0, np.pi / 2, np.pi, 4],
-        'y_tick_labels': ['0', '$\\pi / 2$', '$\\pi$', ''],
-        'v_label': '$|\\alpha|$\n$(10^{3})$',
-        'v_tick_pad': 2,
-        'v_tick_labels': [0, 1, 2],
-        'v_ticks': [0, 1000, 2000],
-        'show_cbar': False,
-        'width': 6.0
+    'plotter'   : {
+        'type'          : 'surface_cz',
+        'x_label'       : '$x$',
+        'x_tick_pad'    : 2,
+        'x_ticks'       : [0, n / 2, n],
+        'y_label'       : '$\\tau$',
+        'y_tick_pad'    : 2,
+        'y_ticks'       : [0, np.pi / 2, np.pi, 4],
+        'y_tick_labels' : ['0', '$\\pi / 2$', '$\\pi$', ''],
+        'v_label'       : '$|\\alpha|$\n$(10^{3})$',
+        'v_tick_pad'    : 2,
+        'v_tick_labels' : [0, 1, 2],
+        'v_ticks'       : [0, 1000, 2000],
+        'show_cbar'     : False,
+        'width'         : 6.0
     }
 }
 
@@ -56,7 +62,29 @@ params = {
 init_log()
 
 # initialize system
-system = OptLett_41_2676(params=params['system'])
+system = OptLett_41_2676(
+    params=params['system']
+)
 
-# get mode amplitude dynamics
-amps, T, X = system.get_mode_amplitude_dynamics(solver_params=params['solver'], plot=True, plotter_params=params['plotter'])
+# initialize solver
+solver = HLESolver(
+    system=system,
+    params=params['solver']
+)
+# get times, mode indices and intensities
+ys  = solver.T
+xs  = list(range(n))
+vs  = np.sqrt(solver.get_mode_intensities())
+
+# plotter
+plotter = MPLPlotter(
+    axes={
+        'X' : xs,
+        'Y' : ys
+    },
+    params=params['plotter']
+)
+plotter.update(
+    vs=vs
+)
+plotter.show()

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2023/07/07 - 00 - Version Upgrade
+> Toolbox version 1.0.0
+* Updated all systems and scripts.
+* Removed `gui_templates` and `GUI`.
+* Adeed plots for Phys. Rev. A **100**, 053814 (2019).
+* Updated `README`.
+
 ## 2022/07/25 - 00 - Version Upgrade
 > Toolbox version 0.8.5
 * Updated all systems and scripts.

@@ -4,17 +4,17 @@
 """Module to simulate the n-cell OM array system in Opt. Lett. **41**, 2676 (2016)."""
 
 __authors__ = ['Sampreet Kalita']
+__toolbox__ = 'qom-v1.0.0'
 __created__ = '2021-08-15'
-__updated__ = '2022-07-24'
-__version__ = '0.8.5'
+__updated__ = '2023-07-07'
 
 # dependencies
 import numpy as np
 
 # qom modules
-from qom.systems import SOMASystem
+from qom.systems import BaseSystem
 
-class OptLett_41_2676(SOMASystem):
+class OptLett_41_2676(BaseSystem):
     r"""Class to simulate the n-cell OM array system in Opt. Lett. **41**, 2676 (2016).
 
     Parameters
@@ -24,25 +24,25 @@ class OptLett_41_2676(SOMASystem):
         ============    ========================================================
         key             meaning
         ============    ========================================================
-        n               (int) number of cells :math:`n`. Default is :math:`151`.
-        Gamma_m         (float) normalized mechanical dampling rate :math:`\Gamma_{m}`. Default is :math:`0.0`.
-        g_0             (float) normalized optomechanical coupling strength :math:`g_{0}`. Default is :math:`10^{-4}`.
-        gamma           (float) normalized optical decay rate :math:`\gamma`. Default is :math:`0.0`.
-        J               (float) normalized photon hopping strength :math:`J`. Default is :math:`2.0`.
-        Omega           (float) normalized mechanical freqency :math:`\Omega`. Default is :math:`1.0`.
-        x_0             (float) envelope width :math:`x_{0}`. Default is :math:`10.0`.
-        n_solitons      (int) number of solitions ``n_solitons``. Default is :math:`1`.
-        dist_norm       (float) normalized initial distance between the solitons :math:`d / x_0`. Default is :math:`0.0`.
-        phi             (float) phase difference between the solitions :math:`\phi`. Default is :math:`0.0`.
-        order           (int) order of the soliton :math:`N`. Default is :math:`1`.
+        n               (*int*) number of cells :math:`n`. Default is :math:`150`.
+        Gamma_m         (*float*) normalized mechanical dampling rate :math:`\Gamma_{m}`. Default is :math:`0.0`.
+        g_0             (*float*) normalized optomechanical coupling strength :math:`g_{0}`. Default is :math:`10^{-4}`.
+        gamma           (*float*) normalized optical decay rate :math:`\gamma`. Default is :math:`0.0`.
+        J               (*float*) normalized photon hopping strength :math:`J`. Default is :math:`2.0`.
+        Omega           (*float*) normalized mechanical freqency :math:`\Omega`. Default is :math:`1.0`.
+        x_0             (*float*) envelope width :math:`x_{0}`. Default is :math:`10.0`.
+        n_solitons      (*int) number of solitions `n_solitons`. Default is :math:`1`.
+        dist_norm       (*float*) normalized initial distance between the solitons :math:`d / x_0`. Default is :math:`0.0`.
+        phi             (*float*) phase difference between the solitions :math:`\phi`. Default is :math:`0.0`.
+        order           (*int*) order of the soliton :math:`N`. Default is :math:`1`.
         ============    ========================================================
-    cb_update : callable, optional
-        Callback function to update status and progress, formatted as ``cb_update(status, progress, reset)``, where ``status`` is a string, ``progress`` is an integer and ``reset`` is a boolean.
+    cb_update : *callable*, optional
+        Callback function to update status and progress, formatted as `cb_update(status, progress, reset)`, where `status` is a string, `progress` is a float and `reset` is a boolean.
     """
 
-    # default system parameters
+    # default parameters of the system
     system_defaults = {
-        'n'         : 151,
+        'n'         : 150,
         'Gamma_m'   : 0.0,
         'g_0'       : 1e-4,
         'gamma'     : 0.0,
@@ -59,193 +59,151 @@ class OptLett_41_2676(SOMASystem):
         """Class constructor for OptLett_41_2676."""
         
         # initialize super class
-        super().__init__(params=params, cb_update=cb_update)
-        
-        # set attributes
-        self.code = 'optlett_41_2676'
-        self.name = 'Array System in Opt. Lett. 41, 2676'
+        super().__init__(
+            params=params,
+            name='OptLett_41_2676',
+            desc='Array System in Opt. Lett. 41, 2676',
+            num_modes=2 * params.get('n', self.system_defaults['n']),
+            cb_update=cb_update
+        )
 
-        # update parameters
-        self.params = dict()
-        for key in self.system_defaults:
-            self.params[key] = params.get(key, self.system_defaults[key])
+    def get_beta_rates(self, modes, c, t):
+        """Method to obtain the rates of change of the mechanical modes.
 
-        # update properties
-        self.num_modes = 2 * params.get('n', self.system_defaults['n'])
-
-    def get_beta_rates(self, t, betas, c):
-        """Method to obtain the mechanical mode rates.
-        
         Parameters
         ----------
-        t : float
-            Time at which the rates are calculated.
-        betas : list
-            Mechanical modes of the system.
-        c : list
-            Optical modes and parameters of the system.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
 
         Returns
         -------
-        beta_rates : list
-            Mechanical mode rates.
+        beta_rates : *numpy.ndarray*
+            Rates of change of the mechanical modes.
         """
 
         # extract frequently used variables
-        n      = int(self.num_modes / 2)
-        alphas = c[:n]
-        Gamma_m, g_0, _, J, Omega, x_0 = c[n:]
-        divisor = J / x_0**2
+        divisor = self.params['J'] / self.params['x_0']**2
 
-        # calculate mechanical mode rates
-        beta_rates = list()
-        for i in range(n):
-            beta_rates.append((1j * g_0 * np.conjugate(alphas[i]) * alphas[i] - (Gamma_m + 1j * Omega) * betas[i]) / divisor)
-
-        return beta_rates
-
+        # return rates
+        return (1.0j * self.params['g_0'] * np.conjugate(modes[::2]) * modes[::2] - (self.params['Gamma_m'] + 1.0j * self.params['Omega']) * modes[1::2]) / divisor
+    
     def get_ivc(self):
-        r"""Function to obtain the initial values and constants required for the IVP.
+        """Method to obtain the initial values of the modes, correlations and derived constants and controls.
         
         Returns
         -------
-        modes_0 : list
-            Initial values of modes.
-            The :math:`2n` elements contain the optical and mechanical modes of each cavity.
-
-        params : list
-            Constants of the IVP.
-            The elements contain the system parameters ``params`` in the following order:
-            ========    =============================================
-            index       parameter
-            ========    =============================================
-            0           normalized mechanical damping rate :math:`\Gamma_{m}`.
-            1           normalized optomechanical coupling strength :math:`g_{0}`.
-            2           normalized optical decay rate :math:`\gamma`.
-            3           normalized photon hopping strength :math:`J`.
-            4           normalized mechanical frequency :math:`\Omega`.
-            5           envelope width :math:`x_{0}`.
-            ========    =============================================
+        iv_modes : *numpy.ndarray*
+            Initial values of the classical modes.
+        iv_corrs : *numpy.ndarray*
+            Initial values of the quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls.
         """
 
         # extract frequently used variables
         n           = self.params['n']
-        Gamma_m     = self.params['Gamma_m']
-        g_0         = self.params['g_0']
-        gamma       = self.params['gamma']
-        J           = self.params['J']
-        Omega       = self.params['Omega']
         x_0         = self.params['x_0']
-        n_solitons  = self.params['n_solitons']
-        dist_norm   = self.params['dist_norm']
-        phi         = self.params['phi']
-        order       = self.params['order']
  
         # set default optical amplitudes
-        temp = order * np.sqrt(Omega * J / 2 / g_0**2 / x_0**2) / np.cosh(np.linspace(- (n - 1) / 2, (n - 1) / 2, n) / x_0)
+        temp = self.params['order'] * np.sqrt(self.params['Omega'] * self.params['J'] / 2 / self.params['g_0']**2 / x_0**2) / np.cosh(np.linspace(- (n - 1.0) / 2.0, (n - 1.0) / 2.0, n) / x_0)
 
+        # initial values of the modes
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
         # double solitons
-        if int(n_solitons) == 2:
-            offset = int(dist_norm * x_0 / 2)
-            alpha_0s = np.roll(temp, - offset) + np.roll(temp, offset) * np.exp(1j * phi)
+        if int(self.params['n_solitons']) == 2:
+            offset          = int(self.params['dist_norm'] * x_0 / 2.0)
+            iv_modes[::2]   = np.roll(temp, - offset) + np.roll(temp, offset) * np.exp(1.0j * self.params['phi'])
         # single soliton
         else:
-            alpha_0s = temp
+            iv_modes[::2] = temp
 
-        # initial mode values as 1D list
-        modes_0 = np.zeros(self.num_modes, dtype=np.complex_).tolist()
-        # add alphas
-        for i in range(n):
-            modes_0[2 * i] = alpha_0s[i]
-        
-        # constant parameters
-        params = [Gamma_m, g_0, gamma, J, Omega, x_0]
+        return iv_modes, None, None
 
-        return modes_0, params
-
-    def get_mode_rates(self, modes, params, t=None):
-        """Function to obtain the rates of the optical and mechanical modes.
+    def get_mode_rates(self, modes, c, t):
+        """Method to obtain the rates of change of the modes.
 
         Parameters
         ----------
-        modes : list
-            Values of the modes.
-        params : list
-            Constants parameters.
-        t : float, optional
-            Time at which the rates are calculated.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
         
         Returns
         -------
-        mode_rates : list
-            Rate for each mode.
+        mode_rates : *numpy.ndarray*
+            Rates of change of the modes.
         """
 
         # extract frequently used variables
-        n       = int(self.num_modes / 2)
-        Gamma_m, g_0, gamma, J, Omega, x_0 = params
-        alphas  = [modes[2 * i] for i in range(n)]
-        betas   = [modes[2 * i + 1] for i in range(n)]
-        divisor = J / x_0**2
+        g_0     = self.params['g_0']
+        J       = self.params['J']
+        alphas  = modes[::2]
+        betas   = modes[1::2]
+        divisor = J / self.params['x_0']**2
+
+        # initialize mode rates
+        mode_rates = np.zeros_like(modes, dtype=np.complex_)
         
-        # mode rates
-        mode_rates = list()
-        for i in range(0, n):
-            # optical mode
-            mode_rates.append((1j * J / 2 * (alphas[i - 1] if i > 0 else 0) + (- gamma + 2j * g_0 * np.real(betas[i]) - 1j * J) * alphas[i] + 1j * J / 2 * (alphas[i + 1] if i < n - 1 else 0)) / divisor)
-            # mechanical mode
-            mode_rates.append((1j * g_0 * np.conjugate(alphas[i]) * alphas[i] - (Gamma_m + 1j * Omega) * betas[i]) / divisor)
+        # update rates for optical mode
+        for i in range(len(alphas)):
+            mode_rates[2 * i] = (1.0j * J / 2.0 * (alphas[i - 1] if i > 0 else 0.0) + (- self.params['gamma'] + 2.0j * g_0 * np.real(betas[i]) - 1.0j * J) * alphas[i] + 1.0j * J / 2.0 * (alphas[i + 1] if i < len(alphas) - 1 else 0.0)) / divisor
+        # update rates for mechanical modes
+        mode_rates[1::2] = (1.0j * g_0 * np.conjugate(alphas) * alphas - (self.params['Gamma_m'] + 1.0j * self.params['Omega']) * betas) / divisor
 
         return mode_rates
         
-    def get_op_d(self, params, ps, x_ss):
-        """Method to get the dispersion operator.
+    def get_coeffs_dispersion(self, modes, c, t):
+        r"""Method to get the coefficients of :math:``( i \omega )^{j}`` in the dispersions.
         
         Parameters
         ----------
-        params : list
-            Parameters for the system.
-        ps : numpy.ndarray
-            Frequencies of the cells.
-        x_ss : float
-            Step-size of the cells.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
 
         Returns
         -------
-        op_D : numpy.ndarray
-            Dispersion operator.
+        coeffs : *numpy.ndarray*
+            Coefficients in the dispersion operator.
         """
 
         # extract frequently used variables
-        _, _, gamma, J, _, x_0 = params
-        divisor = J / x_0**2
+        J       = self.params['J']
+        divisor = J / self.params['x_0']**2
 
-        # calculate dispersion operator
-        op_D = (- gamma - 1j * J / 2 * x_ss**2 * ps**2) / divisor
+        # return coefficients
+        return np.array([0.0, 0.0, - 1.0j * J / 2 * 1.0**2 / divisor], dtype=np.complex_)
 
-        return op_D
-
-    def get_op_n(self, params, betas):
-        """Method to get the nonlinear operator.
+    def get_nonlinearities(self, modes, c, t):
+        """Method to get the nonlinearities.
         
         Parameters
         ----------
-        params : list
-            Parameters for the system.
-        betas : list
-            Mechanical modes of the system.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
 
         Returns
         -------
-        op_N : numpy.ndarray
-            Nonlinear operator.
+        nonlinearities : *numpy.ndarray*
+            Nonlinearities.
         """
 
         # extract frequently used variables
-        _, g_0, _, J, _, x_0 = params
-        divisor = J / x_0**2
+        divisor = self.params['J'] / self.params['x_0']**2
 
-        # calculate nonlinear operator
-        op_N = 2j * g_0 * np.real(betas) / divisor
-
-        return op_N
+        # return nonlinearities
+        return - self.params['gamma'] + 2.0j * self.params['g_0'] * np.real(modes[1::2]) / divisor

@@ -4,17 +4,17 @@
 """Class to simulate the chaotic OM system in Phys. Rev. Lett. **114**, 013601 (2015)."""
 
 __authors__ = ['Sampreet Kalita']
+__toolbox__ = 'qom-v1.0.0'
 __created__ = '2021-07-27'
-__updated__ = '2022-07-25'
-__version__ = '0.8.5'
+__updated__ = '2023-07-07'
 
 # dependencies
 import numpy as np
 
 # qom modules
-from qom.systems import SOSMSystem
+from qom.systems import BaseSystem
 
-class PhysRevLett_114_013601(SOSMSystem):
+class PhysRevLett_114_013601(BaseSystem):
     r"""Class to simulate the chaotic OM system in Phys. Rev. Lett. **114**, 013601 (2015).
 
     Parameters
@@ -24,238 +24,203 @@ class PhysRevLett_114_013601(SOSMSystem):
         ========    ============================================================
         key         meaning
         ========    ============================================================
-        Delta_norm  (float) normalized laser detuning :math:`\Delta / \Omega`. Default is :math:`0.0`.
-        Gamma_norm  (float) normalized mechanical damping rate :math:`\Gamma / \Omega`. Default is :math:`10^{-3}`.
-        kappa_norm  (float) normalized optical decay rate :math:`\kappa / \Omega`. Default is :math:`1.0`.
-        P           (float) pump parameter :math:`P`. Default is `1.4`.
+        Delta_norm  (*float*) normalized laser detuning :math:`\Delta / \Omega`. Default is :math:`0.0`.
+        Gamma_norm  (*float*) normalized mechanical damping rate :math:`\Gamma / \Omega`. Default is :math:`10^{-3}`.
+        kappa_norm  (*float*) normalized optical decay rate :math:`\kappa / \Omega`. Default is :math:`1.0`.
+        P           (*float*) pump parameter :math:`P`. Default is `1.4`.
         ========    ============================================================
     cb_update : callable, optional
-        Callback function to update status and progress, formatted as ``cb_update(status, progress, reset)``, where ``status`` is a string, ``progress`` is an integer and ``reset`` is a boolean.
+        Callback function to update status and progress, formatted as ``cb_update(status, progress, reset)``, where ``status`` is a string, ``progress`` is a float and ``reset`` is a boolean.
     """
 
-    # default system parameters
+    # default parameters of the system
     system_defaults = {
-        'Delta_norm': 0.0,
-        'Gamma_norm': 1e-3,
-        'kappa_norm': 1.0,
-        'P'         : 1.4
+        'Delta_norm'    : 0.0,
+        'Gamma_norm'    : 1e-3,
+        'kappa_norm'    : 1.0,
+        'P'             : 1.4
     }
 
     def __init__(self, params, cb_update=None):
         """Class constructor for PhysRevLett_114_013601."""
         
         # initialize super class
-        super().__init__(params=params, cb_update=cb_update)
+        super().__init__(
+            params=params,
+            name='PhysRevLett_114_013601',
+            desc='Chaotic System in Phys. Rev. Lett. 114, 013601',
+            num_modes=2,
+            cb_update=cb_update
+        )
 
-        # set attributes
-        self.code = 'physrevlett_114_013601'
-        self.name = 'Chaotic System in Phys. Rev. Lett. 114, 013601'  
-
-        # update parameters
-        self.params = dict()
-        for key in self.system_defaults:
-            self.params[key] = params.get(key, self.system_defaults[key])
-        
-        # matrices
-        self.A = None
-
-    def get_A(self, modes, params, t):
-        """Function to obtain the drift matrix.
+    def get_A(self, modes, c, t):
+        """Method to obtain the drift matrix.
 
         Parameters
         ----------
-        modes : list
-            Values of the modes.
-        params : list
-            Constant parameters.
-        t : float
-            Time at which the drift matrix is calculated.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
         
         Returns
         -------
-        A : list
+        A : *numpy.ndarray*
             Drift matrix.
         """
-        
+
         # extract frequently used variables
-        Delta_norm  = params[0]
-        Gamma_norm  = params[1]
-        kappa_norm  = params[2]
-        P           = params[3]
-        alpha, beta = [modes[0], modes[1]]
-        dim         = (2 * self.num_modes, 2 * self.num_modes)
-        
-        # drift matrix
-        if self.A is None or np.shape(self.A) != dim:
-            self.A = np.zeros(dim, dtype=np.float_)
+        alpha, beta = modes
+
         # optical mode
-        self.A[0][0] = - kappa_norm / 2
-        self.A[0][1] = - Delta_norm + 2 * np.real(beta)
-        self.A[0][2] = 2 * np.imag(alpha)
-        self.A[1][0] = Delta_norm - 2 * np.real(beta)
-        self.A[1][1] = - kappa_norm / 2
-        self.A[1][2] = - 2 * np.real(alpha)
+        self.A[0][0]    = - self.params['kappa_norm'] / 2.0
+        self.A[0][1]    = - self.params['Delta_norm'] + 2.0 * np.real(beta)
+        self.A[0][2]    = 2.0 * np.imag(alpha)
+        self.A[1][0]    = self.params['Delta_norm'] - 2.0 * np.real(beta)
+        self.A[1][1]    = - self.params['kappa_norm'] / 2.0
+        self.A[1][2]    = - 2.0 * np.real(alpha)
         # mechanical mode
-        self.A[2][2] = - Gamma_norm / 2
-        self.A[2][3] = 1
-        self.A[3][0] = - P * np.real(alpha)
-        self.A[3][1] = - P * np.imag(alpha)
-        self.A[3][2] = - 1
-        self.A[3][3] = - Gamma_norm / 2
+        self.A[2][2]    = - self.params['Gamma_norm'] / 2.0
+        self.A[2][3]    = 1.0
+        self.A[3][0]    = - self.params['P'] * np.real(alpha)
+        self.A[3][1]    = - self.params['P'] * np.imag(alpha)
+        self.A[3][2]    = - 1.0
+        self.A[3][3]    = - self.params['Gamma_norm'] / 2.0
 
         return self.A
-
-    def get_ivc(self):
-        r"""Function to obtain the initial values and constants required for the IVP.
-        
-        Returns
-        -------
-        iv : list
-            Initial values of variables.
-            First element contains the optical mode amplitude.
-            Next element contains the mechanical mode amplitude.
-            Next :math:`4 \times 2^{2}` elements contain the correlations.
-
-        c : list
-            Constants of the IVP.
-            First :math:`4 \times 2^{2}` elements contain the noise matrix.
-            Rest of the elements contain the system parameters ``params`` in the following order:
-            ========    =============================================
-            index       parameter
-            ========    =============================================
-            0           normalized laser detuning :math:`\Delta / \Omega`.
-            1           normalized mechanical damping rate :math:`\gamma / \Omega`.
-            2           normalized optical decay rate :math:`\kappa / \Omega`.
-            3           pump parameter :math:`P`.
-            ========    =============================================
-        """
-
-        # extract frequently used variables
-        Delta_norm  = self.params['Delta_norm']
-        Gamma_norm  = self.params['Gamma_norm']
-        kappa_norm  = self.params['kappa_norm']
-        P           = self.params['P']
-        dim         = (2 * self.num_modes, 2 * self.num_modes)
- 
-        # initial mode values as 1D list
-        modes_0 = np.zeros(self.num_modes, dtype=np.complex_).tolist()
-
-        # initial quadrature correlations
-        corrs_0 = np.zeros(dim, dtype=np.float_)
-        corrs_0[0][0] = 0.5
-        corrs_0[1][1] = 0.5
-        corrs_0[2][2] = 0.5
-        corrs_0[3][3] = 0.5
-
-        # convert to 1D list and concatenate all variables
-        iv = modes_0 + [np.complex_(element) for element in corrs_0.flatten()]
-
-        # noise correlation matrix
-        D = np.zeros(dim, dtype=np.float_)
-        for i in range(2):
-            D[0][0] = kappa_norm
-            D[1][1] = kappa_norm
-            D[2][2] = Gamma_norm
-            D[3][3] = Gamma_norm
-        
-        # constant parameters
-        params = [Delta_norm, Gamma_norm, kappa_norm, P]
-
-        # all constants
-        c = D.flatten().tolist() + params
-
-        return iv, c
-
-    def get_mode_rates(self, modes, params, t):
-        """Function to obtain the rates of the optical and mechanical modes.
-
-        Parameters
-        ----------
-        modes : list
-            Values of the modes.
-        params : list
-            Constants parameters.
-        t : float
-            Time at which the rates are calculated.
-        
-        Returns
-        -------
-        mode_rates : list
-            Rates for each mode.
-        """
-        
-        # extract frequently used variables
-        Delta_norm, Gamma_norm, kappa_norm, P = params
-        alpha, beta = [modes[0], modes[1]]
-
-        # initialize lists
-        dalpha_dt = (1j * Delta_norm - kappa_norm / 2) * alpha - 1j * alpha * (beta + np.conjugate(beta)) - 1j / 2
-        dbeta_dt = (- 1j - Gamma_norm / 2) * beta - 1j * P / 2 * np.conjugate(alpha) * alpha
-
-        # rearrange per system
-        mode_rates = [dalpha_dt, dbeta_dt]
-
-        return mode_rates
-
-    def get_oss_args(self, params):
-        r"""Method to obtain the arguments required to calculate the optical steady state.
+    
+    def get_coeffs_N_o(self, c):
+        """Method to obtain coefficients of the polynomial in mean optical occupancy.
         
         Parameters
         ----------
-        params : list
-            Constant parameters of the system.
+        c : *numpy.ndarray*
+            Derived constants and controls.
         
         Returns 
         -------
-        A_l : float
-            Amplitude of the laser.
-        Delta : float
-            Effective detuning if method is "basic", else detuning of the laser.
-        kappa : float
-            Optical decay rate.
-        C : float
-            Coefficient of :math:`|\alpha_{s}|^{2}`.
+        coeffs : *numpy.ndarray*
+            Coefficients of the polynomial in mean optical occupancy.
         """
-
-        # extract frequently used variables
-        Delta_norm, Gamma_norm, kappa_norm, P = params
         
         # drive amplitude
-        A_l = - 0.5j
+        A_l_norm = - 0.5j
         # Coefficient of the mean optical occupancies
-        C = 4 * P / (Gamma_norm**2 + 4)
+        C = 4.0 * self.params['P'] / (self.params['Gamma_norm']**2 + 4.0)
+        
+        # get coefficients
+        coeffs      = np.zeros(2 * self.num_modes, dtype=np.float_)
+        coeffs[0]   = 4.0 * C**2
+        coeffs[1]   = 8.0 * C * self.params['Delta_norm']
+        coeffs[2]   = 4.0 * self.params['Delta_norm']**2 + self.params['kappa_norm']**2
+        coeffs[3]   = - 4.0 * np.real(np.conjugate(A_l_norm) * A_l_norm)
 
-        return A_l, Delta_norm, kappa_norm, C
-
-    def get_ss_modes(self, params):
-        """Method to obtain the steady state optical and mechanical mode apmlitudes.
+        return coeffs
+    
+    def get_D(self, modes, corrs, c, t):
+        """Method to obtain the noise matrix.
         
         Parameters
         ----------
-        params : list
-            Constant parameters of the system.
+        modes : *numpy.ndarray*
+            Classical modes.
+        corrs : *numpy.ndarray*
+            Quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
+        
+        Returns
+        -------
+        D : *numpy.ndarray*
+            Noise matrix.
+        """
+
+        # update drift matrix
+        self.D[0][0]    = self.params['kappa_norm']
+        self.D[1][1]    = self.params['kappa_norm']
+        self.D[2][2]    = self.params['Gamma_norm']
+        self.D[3][3]    = self.params['Gamma_norm']
+
+        return self.D
+
+    def get_ivc(self):
+        """Method to obtain the initial values of the modes, correlations and derived constants and controls.
+        
+        Returns
+        -------
+        iv_modes : *numpy.ndarray*
+            Initial values of the classical modes.
+        iv_corrs : *numpy.ndarray*
+            Initial values of the quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        """
+
+        # initial values of the modes
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+
+        # initial values of the correlations
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs[0][0]  = 0.5
+        iv_corrs[1][1]  = 0.5
+        iv_corrs[2][2]  = 0.5
+        iv_corrs[3][3]  = 0.5
+
+        return iv_modes, iv_corrs, None
+
+    def get_mode_rates(self, modes, c, t):
+        """Method to obtain the rates of change of the modes.
+
+        Parameters
+        ----------
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
+        
+        Returns
+        -------
+        mode_rates : *numpy.ndarray*
+            Rates of change of the modes.
+        """
+        
+        # extract frequently used variables
+        alpha, beta = modes
+
+        # calculate mode rates
+        dalpha_dt = (1.0j * self.params['Delta_norm'] - self.params['kappa_norm'] / 2.0) * alpha - 2.0j * alpha * np.real(beta) - 1.0j / 2.0
+        dbeta_dt = (- 1.0j - self.params['Gamma_norm'] / 2.0) * beta - 1.0j * self.params['P'] / 2.0 * np.conjugate(alpha) * alpha
+
+        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex_)
+
+    def get_modes_steady_state(self, c):
+        """Method to obtain the steady state modes.
+        
+        Parameters
+        ----------
+        c : *numpy.ndarray*
+            Derived constants and controls.
         
         Returns 
         -------
-        modes : list
-            Optical and mechanical mode amplitudes.
+        Modes : *numpy.ndarray*
+            Steady state modes.
         """
 
-        # frequently used variables
-        Delta_norm, Gamma_norm, kappa_norm, P = params
+        # get mean optical occupancy
+        N_o = self.get_mean_optical_occupancies()[0]
 
-        # optical mode occupancy
-        N_o, _ = self.get_mean_optical_occupancies(self.get_ivc, self.get_oss_args)
-        n_o = N_o[0]
+        # calculate mechanical mode position
+        beta_real = - 2.0 * self.params['P'] / (self.params['Gamma_norm']**2 + 4.0) * N_o
 
-        # mechanical mode position
-        beta_real = - 2 * P / (Gamma_norm**2 + 4) * n_o
-
-        # mode amplitudes
-        alpha = - 1j / (kappa_norm - 2j * (Delta_norm - 2 * beta_real))
-        beta = - P * n_o * (2 + 1j * Gamma_norm) / (Gamma_norm**2 + 4)
-
-        # list of mode amplitudes
-        modes = [alpha, beta]
-
-        return modes
+        # calculate steady state modes
+        alpha = - 1.0j / (self.params['kappa_norm'] - 2.0j * (self.params['Delta_norm'] - 2.0 * beta_real))
+        beta = - self.params['P'] * N_o * (2.0 + 1.0j * self.params['Gamma_norm']) / (self.params['Gamma_norm']**2 + 4.0)
+        
+        return np.array([[alpha, beta]], dtype=np.complex_)

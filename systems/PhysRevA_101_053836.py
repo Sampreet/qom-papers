@@ -32,17 +32,17 @@ H.-F. Wang      Department of Physics, College of Science, Yanbian University, Y
 """
 
 __authors__ = ['Sampreet Kalita']
+__toolbox__ = 'qom-v1.0.0'
 __created__ = '2021-10-22'
-__updated__ = '2022-07-25'
-__version__ = '0.8.5'
+__updated__ = '2023-07-07'
 
 # dependencies
 import numpy as np
 
 # qom modules
-from qom.systems import SOSMSystem
+from qom.systems import BaseSystem
 
-class PhysRevA_101_053836(SOSMSystem):
+class PhysRevA_101_053836(BaseSystem):
     r"""Class to simulate the single-tone modulated QOM system in Phys. Rev. A **101**, 053836 (2020).
 
     Parameters
@@ -52,19 +52,19 @@ class PhysRevA_101_053836(SOSMSystem):
         ============    ========================================================
         key             meaning
         ============    ========================================================
-        Delta_a_norm    (float) normalized effective detuning of the cavity from the laser :math:`\Delta_{a} / \omega_{m}`. Default is :math:`1.0`.
-        G_norms         (list) normalized base and sideband amplitudes of the effective coupling strength :math:`[ G_{0} / \omega_{m}, G_{-1} / \omega_{m}, G_{+1} / \omega_{m} ]`. Default is :math:`[ 0.1, 0.01, 0.05 ]`.
-        gamma_m_norm    (float) normalized mechanical damping rate :math:`\gamma_{m} / \omega_{m}`. Default is :math:`10^{-6}`.
-        kappa_norm      (float) normalized optical decay rate :math:`\kappa / \omega_{m}`. Default is :math:`0.1`.
-        ns              (list) quanta of thermal photons and phonons :math:`[ n_{a}, n_{b} ]`. Default is :math:`[ 0.0, 10.0 ]`.
-        Omega_norm      (float) normalized modulation frequency :math:`\Omega / \omega_{m}`. Default is :math:`2.0`.
-        t_rwa           (bool) option to work under RWA. Default is `True`.
+        Delta_a_norm    (*float*) normalized effective detuning of the cavity from the laser :math:`\Delta_{a} / \omega_{m}`. Default is :math:`1.0`.
+        G_norms         (*list*) normalized base and sideband amplitudes of the effective coupling strength :math:`[ G_{0} / \omega_{m}, G_{-1} / \omega_{m}, G_{+1} / \omega_{m} ]`. Default is :math:`[ 0.1, 0.01, 0.05 ]`.
+        gamma_m_norm    (*float*) normalized mechanical damping rate :math:`\gamma_{m} / \omega_{m}`. Default is :math:`10^{-6}`.
+        kappa_norm      (*float*) normalized optical decay rate :math:`\kappa / \omega_{m}`. Default is :math:`0.1`.
+        ns              (*list*) quanta of thermal photons and phonons :math:`[ n_{a}, n_{b} ]`. Default is :math:`[ 0.0, 10.0 ]`.
+        Omega_norm      (*float*) normalized modulation frequency :math:`\Omega / \omega_{m}`. Default is :math:`2.0`.
+        t_rwa           (*bool*) option to work under RWA. Default is `True`.
         ============    ========================================================
-    cb_update : callable, optional
-        Callback function to update status and progress, formatted as ``cb_update(status, progress, reset)``, where ``status`` is a string, ``progress`` is an integer and ``reset`` is a boolean.
+    cb_update : *callable*, optional
+        Callback function to update status and progress, formatted as `cb_update(status, progress, reset)`, where `status` is a string, `progress` is a float and `reset` is a boolean.
     """
 
-    # default system parameters
+    # default parameters of the system
     system_defaults = {
         'Delta_a_norm'  : 1.0,
         'G_norms'       : [0.1, 0.01, 0.05],
@@ -79,174 +79,132 @@ class PhysRevA_101_053836(SOSMSystem):
         """Class constructor for PhysRevA_101_053836."""
         
         # initialize super class
-        super().__init__(params=params, cb_update=cb_update)
+        super().__init__(
+            params=params,
+            name='PhysRevA_101_053836',
+            desc='Single-tone Modulated System in Phys. Rev. A 101, 053836',
+            num_modes=2,
+            cb_update=cb_update
+        )
 
-        # set attributes
-        self.code = 'physreva_101_053836'
-        self.name = 'Single-tone Modulated System in Phys. Rev. A 101, 053836'
-
-        # update parameters
-        self.params = dict()
-        for key in self.system_defaults:
-            self.params[key] = params.get(key, self.system_defaults[key])
-
-        # matrices
-        self.A = None
-
-    def get_A(self, modes, params, t):
-        """Function to obtain the drift matrix.
+    def get_A(self, modes, c, t):
+        """Method to obtain the drift matrix.
 
         Parameters
         ----------
-        modes : list
-            Values of the modes.
-        params : list
-            Constants parameters.
-        t : float
-            Time at which the drift matrix is calculated.
+        modes : *numpy.ndarray*
+            Classical modes.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
         
         Returns
         -------
-        A : list
+        A : *numpy.ndarray*
             Drift matrix.
         """
 
         # extract frequently used variables
-        Delta_a_norm, G_0_norm, G_m1_norm, G_p1_norm = params[0:4]
-        gamma_m_norm, kappa_norm, Omega_norm = params[4:7]
-        t_rwa = params[7]
-
-        # initialize drift matrix
-        if self.A is None or np.shape(self.A) != (4, 4):
-            self.A = np.zeros([4, 4], dtype=np.float_)
+        G_0_norm, G_m1_norm, G_p1_norm  = self.params['G_norms']
 
         # with RWA
-        if t_rwa:
+        if self.params['t_rwa']:
             # substituted expresssions
-            G_m_norm = G_0_norm - G_p1_norm
-            G_p_norm = G_0_norm + G_p1_norm
+            G_m_norm    = G_0_norm - G_p1_norm
+            G_p_norm    = G_0_norm + G_p1_norm
 
             # optical position quadrature
-            self.A[0][0] = - kappa_norm / 2
-            self.A[0][3] = - G_m_norm
+            self.A[0][0]    = - self.params['kappa_norm'] / 2.0
+            self.A[0][3]    = - G_m_norm
             # optical momentum quadrature
-            self.A[1][1] = - kappa_norm / 2
-            self.A[1][2] = G_p_norm
+            self.A[1][1]    = - self.params['kappa_norm'] / 2.0
+            self.A[1][2]    = G_p_norm
             # mechanical position quadrature
-            self.A[2][1] = - G_m_norm
-            self.A[2][2] = - gamma_m_norm / 2
+            self.A[2][1]    = - G_m_norm
+            self.A[2][2]    = - self.params['gamma_m_norm'] / 2.0
             # mechanical momentum quadrature
-            self.A[3][0] = G_p_norm
-            self.A[3][3] = - gamma_m_norm / 2
+            self.A[3][0]    = G_p_norm
+            self.A[3][3]    = - self.params['gamma_m_norm'] / 2.0
 
         # without RWA
         else:
             # effective coupling strength
-            G_norm = G_0_norm + G_m1_norm * np.exp(1j * Omega_norm * t) + G_p1_norm * np.exp(-1j * Omega_norm * t)
+            G_norm = G_0_norm + G_m1_norm * np.exp(1.0j * self.params['Omega_norm'] * t) + G_p1_norm * np.exp(- 1.0j * self.params['Omega_norm'] * t)
 
             # optical position quadrature
-            self.A[0][0] = - kappa_norm / 2
-            self.A[0][1] = Delta_a_norm
-            self.A[0][2] = - 2 * np.imag(G_norm) 
+            self.A[0][0]    = - self.params['kappa_norm'] / 2.0
+            self.A[0][1]    = self.params['Delta_a_norm']
+            self.A[0][2]    = - 2.0 * np.imag(G_norm) 
             # optical momentum quadrature
-            self.A[1][0] = - Delta_a_norm
-            self.A[1][1] = - kappa_norm / 2
-            self.A[1][2] = 2 * np.real(G_norm)
+            self.A[1][0]    = - self.params['Delta_a_norm']
+            self.A[1][1]    = - self.params['kappa_norm'] / 2.0
+            self.A[1][2]    = 2.0 * np.real(G_norm)
             # mechanical position quadrature
-            self.A[2][2] = - gamma_m_norm / 2
-            self.A[2][3] = 1.0
+            self.A[2][2]    = - self.params['gamma_m_norm'] / 2.0
+            self.A[2][3]    = 1.0
             # mechanical momentum quadrature
-            self.A[3][0] = 2 * np.real(G_norm)
-            self.A[3][1] = 2 * np.imag(G_norm)
-            self.A[3][2] = - 1.0
-            self.A[3][3] = - gamma_m_norm / 2
+            self.A[3][0]    = 2.0 * np.real(G_norm)
+            self.A[3][1]    = 2.0 * np.imag(G_norm)
+            self.A[3][2]    = - 1.0
+            self.A[3][3]    = - self.params['gamma_m_norm'] / 2.0
 
         return self.A
-
-    def get_ivc(self):
-        r"""Function to obtain the initial values and constants required for the IVP.
+    
+    def get_D(self, modes, corrs, c, t):
+        """Method to obtain the noise matrix.
+        
+        Parameters
+        ----------
+        modes : *numpy.ndarray*
+            Classical modes.
+        corrs : *numpy.ndarray*
+            Quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls.
+        t : *float*
+            Time at which the values are calculated.
         
         Returns
         -------
-        iv : list
-            Initial values of variables.
-            First element contains the optical mode amplitude.
-            Next element contains the mechanical mode amplitude.
-            Next :math:`4 \times 2^{2}` elements contain the correlations.
-
-        c : list
-            Constants of the IVP.
-            First :math:`4 \times 2^{2}` elements contain the noise matrix.
-            The elements contain the system parameters ``params`` in the following order:
-            ========    =============================================
-            index       parameter
-            ========    =============================================
-            0           normalized effective detuning :math:`\Delta_{a} / \omega_{m}`.
-            1           normalized base amplitude of the effective coupling strength :math:`G_{0} / \omega_{m}`.
-            2           normalized minus sideband amplitude of the effective coupling strength :math:`G_{-1} / \omega_{m}`.
-            3           normalized minus sideband amplitude of the effective coupling strength :math:`G_{+1} / \omega_{m}`.
-            4           normalized mechanical damping rate :math:`\gamma_{m} / \omega_{m}`.
-            5           normalized optical decay rate :math:`\kappa / \omega_{m}`.
-            6           normalized modulation frequency :math:`\Omega / \omega_{m}`.
-            7           option to work under RWA ``t_rwa``.
-            ========    =============================================
+        D : *numpy.ndarray*
+            Noise matrix.
         """
 
         # extract frequently used variables
-        Delta_a_norm= self.params['Delta_a_norm']
-        G_norms     = self.params['G_norms']
-        gamma_m_norm= self.params['gamma_m_norm']
-        kappa_norm  = self.params['kappa_norm']
-        n_a, n_m    = self.params['ns']
-        Omega_norm  = self.params['Omega_norm']
-        t_rwa       = self.params['t_rwa']
- 
-        # initial mode values as 1D list
-        modes_0 = np.zeros(2, dtype=np.complex_).tolist()
+        gamma_m_norm    = self.params['gamma_m_norm']
+        kappa_norm      = self.params['kappa_norm']
+        n_a, n_m        = self.params['ns']
 
-        # initial quadrature correlations
-        corrs_0 = np.zeros([4, 4], dtype=np.float_)
-        corrs_0[0][0] = n_a + 0.5 
-        corrs_0[1][1] = n_a + 0.5
-        corrs_0[2][2] = n_m + 0.5
-        corrs_0[3][3] = n_m + 0.5
+        # update drift matrix
+        self.D[0][0]    = kappa_norm * (n_a + 0.5)
+        self.D[1][1]    = kappa_norm * (n_a + 0.5)
+        self.D[2][2]    = gamma_m_norm * (n_m + 0.5)
+        self.D[3][3]    = gamma_m_norm * (n_m + 0.5)
 
-        # convert to 1D list and concatenate all variables
-        iv = modes_0 + [np.complex_(element) for element in corrs_0.flatten()]
+        return self.D
 
-        # noise correlation matrix
-        D = np.zeros([4, 4], dtype=np.float_)
-        D[0][0] = kappa_norm * (n_a + 0.5)
-        D[1][1] = kappa_norm * (n_a + 0.5)
-        D[2][2] = gamma_m_norm * (n_m + 0.5)
-        D[3][3] = gamma_m_norm * (n_m + 0.5)
+    def get_ivc(self):
+        """Method to obtain the initial values of the modes, correlations and derived constants and controls.
         
-        # constant parameters
-        params = [Delta_a_norm] + G_norms + \
-            [gamma_m_norm, kappa_norm, Omega_norm] + \
-            [t_rwa]
-
-        # all constants
-        c = D.flatten().tolist() + params
-
-        return iv, c
-
-    def get_mode_rates(self, modes, params, t):
-        """Function to obtain the rates of the optical and mechanical modes.
-
-        Parameters
-        ----------
-        modes : list
-            Values of the modes.
-        params : list
-            Constants parameters.
-        t : float
-            Time at which the rates are calculated.
-
         Returns
         -------
-        mode_rates : list
-            Rate for each mode.
+        iv_modes : *numpy.ndarray*
+            Initial values of the classical modes.
+        iv_corrs : *numpy.ndarray*
+            Initial values of the quantum correlations.
+        c : *numpy.ndarray*
+            Derived constants and controls.
         """
 
-        return [1, 1]
+        # extract frequently used variables
+        n_a, n_m    = self.params['ns']
+
+        # initial values of the correlations
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs[0][0]  = n_a + 0.5 
+        iv_corrs[1][1]  = n_a + 0.5
+        iv_corrs[2][2]  = n_m + 0.5
+        iv_corrs[3][3]  = n_m + 0.5
+
+        return None, iv_corrs, None
