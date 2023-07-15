@@ -35,13 +35,12 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
+        'colors'        : ['b', 'r'],
         'x_label'       : '$t / \\tau$',
         'x_ticks'       : [10 * np.pi * i for i in range(6)],
         'x_tick_labels' : [10 * i for i in range(6)],
-        'y_colors'      : ['b', 'r'],
         'v_label'       : '$\\langle \\delta X_{b}^{2} \\rangle$',
         'v_ticks'       : [0.0, 1.0, 2.0, 3.0, 4.0],
-        'show_legend'   : False,
         'width'         : 8.0,
         'height'        : 4.0
     }

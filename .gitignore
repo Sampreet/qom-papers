@@ -4,6 +4,7 @@
 # extra folders
 cache*/
 temp*/
+img*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

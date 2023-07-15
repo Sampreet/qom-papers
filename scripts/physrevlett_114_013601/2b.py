@@ -30,8 +30,8 @@ params = {
         'cache'         : True,
         'ode_method'    : 'vode',
         't_min'         : 0.0,
-        't_max'         : 1000.0,
-        't_dim'         : 10001,
+        't_max'         : 10000.0,
+        't_dim'         : 100001,
         'num_steps'     : 100000,
         'step_size'     : 0.1,
         'use_svd'       : True

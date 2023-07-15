@@ -15,7 +15,7 @@ from systems import NewJPhys_22_013049
 params = {
     'looper'    : {
         'show_progress'     : True,
-        # 'file_path_prefix'  : 'data/newjphys_22_013049/2b',
+        'file_path_prefix'  : 'data/newjphys_22_013049/2b',
         'X'                 : {
             'var'   : 'Delta_norm',
             'min'   : -1.0,

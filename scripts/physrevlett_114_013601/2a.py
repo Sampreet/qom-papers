@@ -31,10 +31,10 @@ params = {
         'cache'         : True,
         'ode_method'    : 'vode',
         't_min'         : 0.0,
-        't_max'         : 1000.0,
-        't_dim'         : 10001,
-        't_index_min'   : 9371,
-        't_index_max'   : 10001,
+        't_max'         : 10000.0,
+        't_dim'         : 100001,
+        't_index_min'   : 99371,
+        't_index_max'   : 100001,
         'indices'       : [1]
     },
     'system'    : {
@@ -45,15 +45,15 @@ params = {
     },
     'plotter'   : {
         'type'          : 'scatter',
+        'colors'        : ['k'] * 20,
+        'sizes'         : [0.1] * 20,
+        'styles'        : ['.'] * 20,
         'x_label'       : '$\\Delta / \\Omega$',
         'x_ticks'       : [-1.2, -1.0, -0.8, -0.6, -0.4],
         'x_ticks_minor' : [i * 0.05 - 1.2 for i in range(17)],
-        'y_colors'      : ['k'] * 20,
-        'y_sizes'       : [0.1] * 20,
-        'y_styles'      : ['o'] * 20,
         'v_label'       : 'amplitudes',
         'v_limits'      : [0.25, 2.0],
-        'v_ticks'       : [0.5, 1.0, 1.5],
+        'v_ticks'       : [0.5, 1.0, 1.5, 2.0],
         'v_ticks_minor' : [i * 0.25 + 0.25 for i in range(8)],
         'width'         : 6.0,
         'height'        : 4.0
@@ -96,6 +96,6 @@ if __name__ == '__main__':
     )
     plotter.update(
         xs=looper.axes['X']['val'],
-        vs=looper.results['V'].transpose()
+        vs=np.transpose(looper.results['V'])
     )
     plotter.show()

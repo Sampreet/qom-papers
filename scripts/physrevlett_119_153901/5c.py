@@ -39,15 +39,16 @@ params = {
         't_alphas'  : 'square'
     },
     'plotter'   : {
-        'type'          : 'pcolormesh',
-        'x_label'       : '$x$',
-        'x_ticks'       : [0, 200, 400],
-        'x_tick_labels' : [-1, 0, 1],
-        'y_label'       : '$\\tau$',
-        'y_ticks'       : [0, 2, 4],
-        'show_cbar'     : True,
-        'cbar_title'    : '$|\\alpha|$',
-        'cbar_ticks'    : [0, 4000, 8000]
+        'type'              : 'pcolormesh',
+        'x_label'           : '$x$',
+        'x_ticks'           : [0, 200, 400],
+        'x_tick_labels'     : [-1, 0, 1],
+        'y_label'           : '$\\tau$',
+        'y_ticks'           : [0, 2, 4],
+        'show_cbar'         : True,
+        'cbar_title'        : '$| \\alpha | / 10^{3}$',
+        'cbar_tick_labels'  : [0, 4, 8],
+        'cbar_ticks'        : [0, 4000, 8000]
     }
 }
 

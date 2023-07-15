@@ -38,11 +38,11 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
+        'colors'        : ['k', 'g'],
         'x_label'       : 'Im $\\langle a \\rangle / 10^{4}$',
         'x_tick_labels' : [-4, 2, 8],
         'x_ticks'       : [-40e3, 20e3, 80e3],
         'x_ticks_minor' : [i * 2e4 - 4e4 for i in range(7)],
-        'y_colors'      : ['b', 'r'],
         'v_label'       : 'Re $\\langle a \\rangle / 10^{4}$',
         'v_tick_labels' : [-10, -6, -2],
         'v_ticks'       : [-100e3, -60e3, -20e3],

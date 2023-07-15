@@ -58,14 +58,14 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
+        'colors'        : ['b', 'r'],
         'x_label'       : '$G_{0} / \\kappa$',
         'x_ticks'       : [0.2 + 0.2 * i for i in range(10)],
         'x_tick_labels' : ['{:0.1f}'.format(0.2 + 0.2 * i) for i in range(10)],
-        'y_colors'      : ['b', 'r'],
-        'y_legend'      : ['$n_{m} = 10$', '$n_{m} = 100$'],
         'v_label'       : '$\\langle \\delta \\tilde{X}_{b}^{2} \\rangle_{max}$ (dB)',
         'v_ticks'       : [0, 5, 10, 15, 20, 25],
         'show_legend'   : True,
+        'legend_labels' : ['$n_{m} = 10$', '$n_{m} = 100$'],
         'width'         : 8.0,
         'height'        : 4.0
     }

@@ -49,7 +49,7 @@ params = {
         'y_tick_pad'    : 2,
         'y_ticks'       : [0, np.pi / 2, np.pi, 4],
         'y_tick_labels' : ['0', '$\\pi / 2$', '$\\pi$', ''],
-        'v_label'       : '$|\\alpha|$\n$(10^{3})$',
+        'v_label'       : '$\\frac{| \\alpha |}{10^{3}}$',
         'v_tick_pad'    : 2,
         'v_tick_labels' : [0, 1, 2],
         'v_ticks'       : [0, 1000, 2000],

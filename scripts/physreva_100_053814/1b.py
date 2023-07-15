@@ -45,7 +45,7 @@ params = {
         'y_tick_pad'        : 2,
         'y_ticks'           : [0, 10, 20],
         'y_ticks_minor'     : [5, 15],
-        'v_label'           : '$|u|^{2}$',
+        'v_label'           : '$| u |^{2}$',
         'v_tick_pad'        : 2,
         'v_ticks'           : [0, 4, 8, 12],
         'v_ticks_minor'     : [2, 6, 10, 14],

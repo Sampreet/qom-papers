@@ -199,13 +199,13 @@ class PhysRevLett_98_030405(BaseSystem):
         Returns 
         -------
         Modes : *numpy.ndarray*
-            Steady state modes.
+            Steady state modes with shape `(dim, num_modes)`.
         """
 
         # extract frequently used variables
         Delta, E, _, kappa = c
 
-        return np.array([
+        return np.array([[
             np.abs(E / (kappa + 1.0j * Delta)),
             1.0
-        ], dtype=np.complex_)
+        ]], dtype=np.complex_)

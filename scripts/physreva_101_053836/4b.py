@@ -51,15 +51,15 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
+        'colors'        : ['b', 'r'],
         'x_label'       : '$G_{1} / G_{0}$',
         'x_ticks'       : [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
-        'y_colors'      : ['b', 'r'],
-        'y_legend'      : ['$n_{m} = 10$', '$n_{m} = 100$'],
         'v_label'       : '$\\langle \\beta^{\\dagger} \\beta \\rangle$',
         'v_ticks'       : [1e-4, 1, 1e4],
         'v_tick_labels' : ['$10^{-4}$', '$10^{0}$', '$10^{4}$'],
         'v_scale'       : 'log',
         'show_legend'   : True,
+        'legend_labels' : ['$n_{m} = 10$', '$n_{m} = 100$'],
         'width'         : 8.0,
         'height'        : 4.0
     }

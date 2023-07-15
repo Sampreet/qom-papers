@@ -26,7 +26,7 @@ params = {
     },
     'solver'    : {
         'use_system_method' : True,
-        'measure_codes'     : ['entan_ln'],
+        'measure_codes'     : ['entan_ln_2'],
         'indices'           : (0, 1)
     },
     'system'    : {
@@ -42,11 +42,11 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
+        'colors'        : ['b', 'r'],
+        'styles'        : ['-', '--'],
         'x_label'       : '$T$ (K)',
         'x_ticks'       : [i * 5 for i in range(6)],
         'x_ticks_minor' : [i for i in range(26)],
-        'y_colors'      : ['b', 'r'],
-        'y_styles'      : ['-', '--'],
         'v_label'       : '$E_{N}$',
         'v_limits'      : [0.0, 0.32],
         'v_ticks'       : [0.0, 0.1, 0.2, 0.3],

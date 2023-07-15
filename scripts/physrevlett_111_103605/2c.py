@@ -48,17 +48,17 @@ params = {
     },
     'plotter'   : {
         'type'          : 'scatters',
+        'colors'        : ['b', 'g'],
+        'sizes'         : [50, 50],
+        'styles'        : ['o', 's'],
         'x_label'       : '$n_{b}$',
         'x_ticks'       : [0, 5, 10, 15, 20],
         'x_ticks_minor' : [i for i in range(21)],
-        'y_colors'      : ['b', 'g'],
-        'y_legend'      : ['$\\bar{S}_{c}$', '$\\bar{S}_{p}$'],
-        'y_sizes'       : [50, 50],
-        'y_styles'      : ['o', 's'],
         'v_label'       : '$\\bar{S}_{c}, \\bar{S}_{p}$',
         'v_ticks'       : [0, 0.1, 0.2, 0.3],
         'v_ticks_minor' : [i * 0.02 for i in range(16)],
         'show_legend'   : True,
+        'legend_labels' : ['$\\bar{S}_{c}$', '$\\bar{S}_{p}$'],
         'width'         : 6.0,
         'height'        : 4.0
     }
@@ -88,6 +88,6 @@ if __name__ == '__main__':
     )
     plotter.update(
         xs=looper.axes['X']['val'],
-        vs=looper.results['V'].transpose()
+        vs=np.transpose(looper.results['V'])
     )
     plotter.show()

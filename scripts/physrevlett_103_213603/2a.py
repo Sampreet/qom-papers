@@ -10,7 +10,7 @@ from qom.ui import init_log
 from qom.ui.plotters import MPLPlotter
 
 # add path to local libraries
-sys.path.append(os.path.abspath(os.path.join('..', 'qom-papers')))
+sys.path.append(os.path.abspath(os.path.join('.')))
 # import system
 from systems import PhysRevLett_103_213603
 
@@ -39,14 +39,16 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
-        'show_legend'   : True,
+        'colors'        : ['b', 'g'],
         'x_label'       : '$t / \\tau$',
         'x_ticks'       : [30.0, 30.5, 31.0, 31.5, 32.0],
-        'y_name'        : '$P_{\\pm 1}$',
-        'y_unit'        : '$\\mathrm{mW}$',
-        'y_colors'      : ['b', 'g'],
         'v_label'       : '$\\langle \\delta q^{2} \\rangle$',
         'v_ticks'       : [0.0, 0.4, 0.8, 1.2, 1.6],
+        'show_legend'   : True,
+        'legend_labels' : [
+            '$P_{\\pm 1} = 0 \\mathrm{mW}$',
+            '$P_{\\pm 1} = 2 \\mathrm{mW}$'
+        ],
         'width'         : 6.0
     }
 }

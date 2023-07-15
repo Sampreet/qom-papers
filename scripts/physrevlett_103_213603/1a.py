@@ -38,12 +38,12 @@ params = {
     },
     'plotter'   : {
         'type'          : 'line',
+        'colors'        : ['k', 'g'],
         'x_label'       : '$\\langle q \\rangle / 10^{3}$',
         'x_limits'      : [10e3, 30e3],
         'x_tick_labels' : [10, 20, 30],
         'x_ticks'       : [10e3, 20e3, 30e3],
         'x_ticks_minor' : [i * 2e3 + 10e3 for i in range(10)],
-        'y_colors'      : ['k', 'g'],
         'v_label'       : '$\\langle p \\rangle / 10^{3}$',
         'v_limits'      : [-12e3, 10e3],
         'v_tick_labels' : [-10, 0, 10],

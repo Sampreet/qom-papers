@@ -20,7 +20,7 @@ n = 300
 params = {
     'solver'    : {
         'show_progress' : True,
-        'cache'         : False,
+        'cache'         : True,
         'ode_method'    : 'vode',
         't_min'         : 0.0,
         't_max'         : 100.0,
@@ -48,7 +48,7 @@ params = {
         'y_label'       : '$\\tau$',
         'y_tick_pad'    : 2,
         'y_ticks'       : [0, 50, 100],
-        'v_label'       : '$|\\alpha|$\n$(10^{3})$',
+        'v_label'       : '$\\frac{| \\alpha |}{10^{3}}$',
         'v_tick_pad'    : 2,
         'v_ticks'       : [0, 1000, 2000],
         'v_tick_labels' : [0, 1, 2],

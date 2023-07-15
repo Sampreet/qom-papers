@@ -33,7 +33,7 @@ params = {
     },
     'solver': {
         'show_progress' : False,
-        'cache'         : True,
+        'cache'         : False,
         'ode_method'    : 'vode',
         't_min'         : 0.0,
         't_max'         : 1000.0,
@@ -54,9 +54,9 @@ params = {
         'x_ticks'       : [-1.5, -1.0, -0.5, 0.0],
         'y_label'       : '$P$',
         'y_ticks'       : [1.0, 1.2, 1.4, 1.6],
+        'show_cbar'     : True,
         'cbar_title'    : '$\\lambda_{max}$',
         'cbar_ticks'    : [-0.005, 0.00, 0.005],
-        'show_cbar'     : True,
         'cbar_position' : 'top'
     }
 }

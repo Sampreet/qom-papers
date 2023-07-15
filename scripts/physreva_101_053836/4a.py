@@ -51,13 +51,13 @@ params = {
     },
     'plotter'   : {
         'type'          : 'lines',
+        'colors'        : ['b', 'r'],
         'x_label'       : '$G_{1} / G_{0}$',
         'x_ticks'       : [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
-        'y_colors'      : ['b', 'r'],
-        'y_legend'      : ['$n_{m} = 10$', '$n_{m} = 100$'],
         'v_label'       : '$\\langle \\delta \\tilde{X}_{b}^{2} \\rangle$',
         'v_ticks'       : [0.0, 5.0, 10.0, 15.0, 20.0],
         'show_legend'   : True,
+        'legend_labels' : ['$n_{m} = 10$', '$n_{m} = 100$'],
         'width'         : 8.0,
         'height'        : 4.0
     }
