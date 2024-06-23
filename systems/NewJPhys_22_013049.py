@@ -4,9 +4,10 @@
 """Class to simulate the weakly dissipative OM system in New J. Phys. **22**, 013049 (2020)."""
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-07-27'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['NewJPhys_22_013049']
 
 # dependencies
 import numpy as np

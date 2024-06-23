@@ -31,9 +31,10 @@ Simon Groblacher    Delft University of Technology, 2628CJ Delft, The Netherland
 """
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-05-15'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['NewJPhys_22_063041']
 
 # dependencies
 import numpy as np
@@ -162,7 +163,7 @@ class NewJPhys_22_063041(BaseSystem):
         gamma_LC, gamma_m, kappa    = c[3:6]
         n_LC, n_m                   = c[8:10]
 
-        # update drift matrix
+        # update noise matrix
         self.D[0][0] = kappa
         self.D[1][1] = kappa
         self.D[3][3] = gamma_m * (2.0 * n_m + 1.0)

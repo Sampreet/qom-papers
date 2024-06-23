@@ -27,9 +27,10 @@ J. Eisert       Institute of Advanced Study Berlin, D-14193 Berlin, Germany
 """
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-05-16'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevLett_103_213603']
 
 # dependencies
 import numpy as np
@@ -153,12 +154,12 @@ class PhysRevLett_103_213603(BaseSystem):
         """
 
         # extract frequently used variables
-        gamma_m, kappa, Omega = c[4:7]
+        gamma_m, kappa, Omega, n_th = c[4:]
 
         # update noise matrix
         self.D[0][0]    = kappa
         self.D[1][1]    = kappa
-        self.D[3][3]    = gamma_m
+        self.D[3][3]    = gamma_m * (2 * n_th + 1)
         # normalize
         self.D *= 2.0 * np.pi / Omega
         
@@ -185,6 +186,7 @@ class PhysRevLett_103_213603(BaseSystem):
             4           mechanical damping rate :math:`\gamma_{m}`.
             5           optical decay rate :math:`\kappa`.
             6           modulation frequency :math:`\Omega`.
+            7           thermal phonon occupancy :math:`n_{th}`.
             ========    =============================================
         """
         
@@ -231,7 +233,7 @@ class PhysRevLett_103_213603(BaseSystem):
         iv_corrs[3][3]  = n_th + 0.5
         
         # derived constants
-        c = np.array([Delta_0, E_0, E_1, G_0, gamma_m, kappa, Omega], dtype=np.float_)
+        c = np.array([Delta_0, E_0, E_1, G_0, gamma_m, kappa, Omega, n_th], dtype=np.float_)
 
         return iv_modes, iv_corrs, c
 

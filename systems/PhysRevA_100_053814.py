@@ -4,9 +4,10 @@
 """Class to simulate the cavity soliton system in Phys. Rev. A **100**, 053814 (2019)."""
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2022-07-25'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevA_100_053814']
 
 # dependencies
 import numpy as np

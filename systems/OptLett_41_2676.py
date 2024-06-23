@@ -4,9 +4,10 @@
 """Module to simulate the n-cell OM array system in Opt. Lett. **41**, 2676 (2016)."""
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-08-15'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['OptLett_41_2676']
 
 # dependencies
 import numpy as np
@@ -105,8 +106,8 @@ class OptLett_41_2676(BaseSystem):
         """
 
         # extract frequently used variables
-        n           = self.params['n']
-        x_0         = self.params['x_0']
+        n   = self.params['n']
+        x_0 = self.params['x_0']
  
         # set default optical amplitudes
         temp = self.params['order'] * np.sqrt(self.params['Omega'] * self.params['J'] / 2 / self.params['g_0']**2 / x_0**2) / np.cosh(np.linspace(- (n - 1.0) / 2.0, (n - 1.0) / 2.0, n) / x_0)

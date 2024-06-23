@@ -4,9 +4,10 @@
 """Class to simulate the chaotic OM system in Phys. Rev. Lett. **114**, 013601 (2015)."""
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-07-27'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevLett_114_013601']
 
 # dependencies
 import numpy as np
@@ -139,7 +140,7 @@ class PhysRevLett_114_013601(BaseSystem):
             Noise matrix.
         """
 
-        # update drift matrix
+        # update noise matrix
         self.D[0][0]    = self.params['kappa_norm']
         self.D[1][1]    = self.params['kappa_norm']
         self.D[2][2]    = self.params['Gamma_norm']

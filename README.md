@@ -10,6 +10,7 @@ paper link  | paper name    | qom system    | qom scripts
 [New J. Phys. **22**, 063041](https://doi.org/10.1088/1367-2630/ab90d2) | Stationary Quantum Entanglement between a Massive Mechanical Membrane and a Low Frequency LC Circuit | [NewJPhys_22_063041](./systems/NewJPhys_22_063041.py) | [newjphys_22_063041](./scripts/newjphys_22_063041/)
 [Opt. Lett. **41**, 2676](https://doi.org/10.1364/OL.41.002676) | Solitons in Optomechanical Arrays | [OptLett_41_2676](./systems/OptLett_41_2676.py) | [optlett_41_2676](./scripts/optlett_41_2676/)
 [Phys. Rev. A **100**, 053814](https://doi.org/10.1103/PhysRevA.100.053814) | Stability and Variational Analysis of Cavity Solitons under Various Perturbations | [PhysRevA_100_053814](./systems/PhysRevA_100_053814.py) | [physreva_101_053814](./scripts/physreva_100_053814/)
+[Phys. Rev. A **100**, 063846](https://doi.org/10.1103/PhysRevA.100.063846) | Delayed Sudden Death of Entanglement at Exceptional Points | [PhysRevA_100_063846](./systems/PhysRevA_100_063846.py) | [physreva_101_063846](./scripts/physreva_100_063846/)
 [Phys. Rev. A **101**, 053836](https://doi.org/10.1103/PhysRevA.101.053836) | Strong Mechanical Squeezing in a Standard Optomechanical System by Pump Modulation | [PhysRevA_101_053836](./systems/PhysRevA_101_053836.py) | [physreva_101_053836](./scripts/physreva_101_053836/)
 [Phys. Rev. Lett. **103**, 213603](https://doi.org/10.1103/PhysRevLett.103.213603) | Gently Modulating Optomechanical Systems | [PhysRevLett_103_213603](./systems/PhysRevLett_103_213603.py) | [physrevlett_103_213603](./scripts/physrevlett_103_213603/)
 [Phys. Rev. Lett. **111**, 103605](https://doi.org/10.1103/PhysRevLett.111.103605) | Measures of Quantum Synchronization in Continuous Variable Systems | [PhysRevLett_111_103605](./systems/PhysRevLett_111_103605.py) | [physrevlett_111_103605](./scripts/physrevlett_111_103605/)
@@ -48,35 +49,14 @@ ROOT_DIR/
 
 ### Installing Dependencies
 
-The project requires `Python 3.8+` installed via the [Anaconda distribution](https://www.anaconda.com/products/individual). 
-An extensive guide to set up your python environment same can be found [here](https://sampreet.github.io/python-for-physicists/modules/m01-getting-started/m01t01-setting-up-python.html).
-
-Once the installation is complete and `conda` is configured, it is preferable to create a new conda environment (say `qom`) and activate it using:
-
-```bash
-conda create -n qom python=3
-conda activate qom
-```
-
-This project uses [The Quantum Optomechanics Toolbox](https://github.com/Sampreet/qom) which can be installed via Python Package Index using `pip` by executing:
-
-```bash
-pip install -i https://test.pypi.org/simple/ qom
-```
-
-Alternatively, [clone the repository](https://github.com/Sampreet/qom) or [download the sources](https://github.com/Sampreet/qom/archive/refs/heads/master.zip) as `.zip` and extract the contents.
-Now, execute the following from *outside* the top-level directory, `ROOT_DIR`, inside which `setup.py` is located:
-
-```bash
-pip install -e ROOT_DIR
-```
+All numerical data and plots are obtained using the [Quantum Optomechanics Toolbox](https://github.com/sampreet/qom), an open-source Python framework to simulate optomechanical systems. Refer to the [QOM toolbox documentation](https://sampreet.github.io/qom-docs/v1.0.2) for the steps to install this libary.
 
 ### Running the Scripts
 
-To run the scripts, navigate *inside* the top-level directory, `ROOT_DIR`, and execute:
+To run the scripts, navigate *inside* the top-level directory, and execute:
 
 ```bash
 python scripts/foobar_123/baz.py
 ```
 
-Here, `foobar_123` is the name of the folder inside `scripts` and `baz.py` is the name of the script (refer to the repository structure).
+Here, `foobar_123` is the name of the folder (containing the paper information) inside `scripts` and `baz.py` is the name of the script (refer to the repository structure).

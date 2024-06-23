@@ -54,6 +54,7 @@ params = {
         'x_ticks'       : [0, 3, 6],
         'y_label'       : '$G / \\kappa$',
         'y_ticks'       : [0, 3, 6],
+        'show_cbar'     : True,
         'cbar_title'    : '$E_{N}$',
         'cbar_ticks'    : [0, 0.1, 0.2, 0.3]
     }

@@ -32,9 +32,10 @@ H.-F. Wang      Department of Physics, College of Science, Yanbian University, Y
 """
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-10-22'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevA_101_053836']
 
 # dependencies
 import numpy as np
@@ -176,7 +177,7 @@ class PhysRevA_101_053836(BaseSystem):
         kappa_norm      = self.params['kappa_norm']
         n_a, n_m        = self.params['ns']
 
-        # update drift matrix
+        # update noise matrix
         self.D[0][0]    = kappa_norm * (n_a + 0.5)
         self.D[1][1]    = kappa_norm * (n_a + 0.5)
         self.D[2][2]    = gamma_m_norm * (n_m + 0.5)

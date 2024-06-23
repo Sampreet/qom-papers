@@ -35,9 +35,10 @@ R. Fazio        NEST, Scuola Normale Superiore and Istituto Nanoscienze-CNR, I-5
 """
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-05-18'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevLett_111_103605']
 
 # dependencies
 import numpy as np

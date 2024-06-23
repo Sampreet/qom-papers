@@ -54,6 +54,7 @@ params = {
         'x_ticks'       : [0.4, 1.0, 1.6],
         'y_label'       : '$\\omega_{LC} / \\omega_{m}$',
         'y_ticks'       : [0.4, 1.0, 1.6],
+        'show_cbar'     : True,
         'cbar_title'    : '$E_{N}$',
         'cbar_ticks'    : [0, 0.05, 0.1]
     }

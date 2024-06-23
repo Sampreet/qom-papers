@@ -4,9 +4,10 @@
 """Module to simulate the N-cell OM array system in Phys. Rev. Lett. **119**, 153901 (2017)."""
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2021-08-09'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevLett_119_153901']
 
 # dependencies
 import numpy as np

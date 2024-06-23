@@ -4,9 +4,10 @@
 """Class to simulate the moveable end-mirror QOM system in Phys. Rev. Lett. **98**, 030405 (2007)."""
 
 __authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.0'
+__toolbox__ = 'qom-v1.0.2'
 __created__ = '2022-07-31'
-__updated__ = '2023-07-07'
+__updated__ = '2024-06-23'
+__all__     = ['PhysRevLett_98_030405']
 
 # dependencies
 import numpy as np
@@ -130,7 +131,7 @@ class PhysRevLett_98_030405(BaseSystem):
         kappa   = c[3]
         n_bar   = 0.0 if T == 0.0 else 1.0 / (np.exp(sc.hbar * self.params['omega_m'] / sc.k / T) - 1)
 
-        # update drift matrix
+        # update noise matrix
         self.D[0][0]    = kappa
         self.D[1][1]    = kappa
         self.D[3][3]    = self.params['gamma_m'] * (2.0 * n_bar + 1.0)
