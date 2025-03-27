@@ -34,10 +34,10 @@ R. Fazio        NEST, Scuola Normale Superiore and Istituto Nanoscienze-CNR, I-5
 * No functional relationship between discord and synchronization observed.
 """
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-05-18'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-05-18"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevLett_111_103605']
 
 # dependencies
@@ -86,7 +86,7 @@ class PhysRevLett_111_103605(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevLett_111_103605',
-            desc='Coupled System in Phys. Rev. Lett. 111, 103605',
+            desc="Coupled System in Phys. Rev. Lett. 111, 103605",
             num_modes=4,
             cb_update=cb_update
         )
@@ -215,10 +215,10 @@ class PhysRevLett_111_103605(BaseSystem):
         dim     = (2 * self.num_modes, 2 * self.num_modes)
  
         # initial values of the modes
-        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex128)
 
         # initial quadrature correlations
-        iv_corrs = np.zeros(dim, dtype=np.float_)
+        iv_corrs = np.zeros(dim, dtype=np.float64)
         for i in range(2):
             iv_corrs[4* i + 0][4* i + 0]    = 0.5
             iv_corrs[4* i + 1][4* i + 1]    = 0.5
@@ -226,7 +226,7 @@ class PhysRevLett_111_103605(BaseSystem):
             iv_corrs[4* i + 3][4* i + 3]    = n_b + 0.5
         
         # derived constants
-        c = np.array([E, g, gamma, kappa, mu, omega_1, omega_2], dtype=np.float_)
+        c = np.array([E, g, gamma, kappa, mu, omega_1, omega_2], dtype=np.float64)
 
         return iv_modes, iv_corrs, c
 
@@ -263,4 +263,4 @@ class PhysRevLett_111_103605(BaseSystem):
         dbeta_dts   = [1.0j * Gs[i] * np.conjugate(alphas[i]) + (- gamma - 1.0j * omegas[i]) * betas[i] + 1.0j * mu * betas[1 - i] for i in range(2)]
 
         # rearrange rates, normalize and return
-        return np.array([dalpha_dts[0], dbeta_dts[0], dalpha_dts[1], dbeta_dts[1]], dtype=np.complex_) * 2.0 * np.pi / omegas[0]
+        return np.array([dalpha_dts[0], dbeta_dts[0], dalpha_dts[1], dbeta_dts[1]], dtype=np.complex128) * 2.0 * np.pi / omegas[0]

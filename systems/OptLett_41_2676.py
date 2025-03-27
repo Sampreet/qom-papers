@@ -3,10 +3,10 @@
  
 """Module to simulate the n-cell OM array system in Opt. Lett. **41**, 2676 (2016)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-08-15'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-08-15"
+__updated__ = "2025-03-11"
 __all__     = ['OptLett_41_2676']
 
 # dependencies
@@ -63,7 +63,7 @@ class OptLett_41_2676(BaseSystem):
         super().__init__(
             params=params,
             name='OptLett_41_2676',
-            desc='Array System in Opt. Lett. 41, 2676',
+            desc="Array System in Opt. Lett. 41, 2676",
             num_modes=2 * params.get('n', self.system_defaults['n']),
             cb_update=cb_update
         )
@@ -113,7 +113,7 @@ class OptLett_41_2676(BaseSystem):
         temp = self.params['order'] * np.sqrt(self.params['Omega'] * self.params['J'] / 2 / self.params['g_0']**2 / x_0**2) / np.cosh(np.linspace(- (n - 1.0) / 2.0, (n - 1.0) / 2.0, n) / x_0)
 
         # initial values of the modes
-        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex128)
         # double solitons
         if int(self.params['n_solitons']) == 2:
             offset          = int(self.params['dist_norm'] * x_0 / 2.0)
@@ -150,7 +150,7 @@ class OptLett_41_2676(BaseSystem):
         divisor = J / self.params['x_0']**2
 
         # initialize mode rates
-        mode_rates = np.zeros_like(modes, dtype=np.complex_)
+        mode_rates = np.zeros_like(modes, dtype=np.complex128)
         
         # update rates for optical mode
         for i in range(len(alphas)):
@@ -183,7 +183,7 @@ class OptLett_41_2676(BaseSystem):
         divisor = J / self.params['x_0']**2
 
         # return coefficients
-        return np.array([0.0, 0.0, - 1.0j * J / 2 * 1.0**2 / divisor], dtype=np.complex_)
+        return np.array([0.0, 0.0, - 1.0j * J / 2 * 1.0**2 / divisor], dtype=np.complex128)
 
     def get_nonlinearities(self, modes, c, t):
         """Method to get the nonlinearities.

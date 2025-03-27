@@ -3,10 +3,10 @@
  
 """Class to simulate the cavity soliton system in Phys. Rev. A **100**, 053814 (2019)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2022-07-25'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2022-07-25"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevA_100_053814']
 
 # dependencies
@@ -51,7 +51,7 @@ class PhysRevA_100_053814(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevA_100_053814',
-            desc='Cavity Soliton System in Phys. Rev. A 100, 053814',
+            desc="Cavity Soliton System in Phys. Rev. A 100, 053814",
             num_modes=2 * params.get('N', self.system_defaults['N']),
             cb_update=cb_update
         )
@@ -75,7 +75,7 @@ class PhysRevA_100_053814(BaseSystem):
         t_alphas    = self.params['t_alphas']
  
         # initial values of the modes
-        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex128)
         if t_alphas == 'sech':
             iv_modes[::2] = 0.5 + 1.0 / np.cosh([(i - N / 2.0) * 2.0 * tau_max / N for i in range(N)])
 
@@ -104,7 +104,7 @@ class PhysRevA_100_053814(BaseSystem):
         delta_N = N / 2.0 / self.params['tau_max']
 
         # return coefficients
-        return np.array([0.0j, 0.0j, - 1.0j * (-1.0) * delta_N**2], dtype=np.complex_)
+        return np.array([0.0j, 0.0j, - 1.0j * (-1.0) * delta_N**2], dtype=np.complex128)
 
     def get_nonlinearities(self, modes, c, t):
         """Method to get the nonlinearities.

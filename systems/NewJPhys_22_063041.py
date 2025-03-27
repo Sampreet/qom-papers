@@ -30,10 +30,10 @@ Simon Groblacher    Delft University of Technology, 2628CJ Delft, The Netherland
 * Entanglement is robust against temperature.
 """
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-05-15'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-05-15"
+__updated__ = "2025-03-11"
 __all__     = ['NewJPhys_22_063041']
 
 # dependencies
@@ -91,7 +91,7 @@ class NewJPhys_22_063041(BaseSystem):
         super().__init__(
             params=params,
             name='NewJPhys_22_063041',
-            desc='Hybrid System in New J. Phys. 22, 063041',
+            desc="Hybrid System in New J. Phys. 22, 063041",
             num_modes=3,
             cb_update=cb_update
         )
@@ -243,7 +243,7 @@ class NewJPhys_22_063041(BaseSystem):
         n_m     = sc.k * T_m / sc.hbar / omega_m
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = 0.5 
         iv_corrs[1][1]  = 0.5
         iv_corrs[2][2]  = n_m + 0.5
@@ -252,6 +252,6 @@ class NewJPhys_22_063041(BaseSystem):
         iv_corrs[5][5]  = n_LC + 0.5
         
         # derived constants
-        c = np.array([Delta, G, g, gamma_LC, gamma_m, kappa, omega_LC_prime, omega_m, n_LC, n_m], dtype=np.float_)
+        c = np.array([Delta, G, g, gamma_LC, gamma_m, kappa, omega_LC_prime, omega_m, n_LC, n_m], dtype=np.float64)
 
         return None, iv_corrs, c

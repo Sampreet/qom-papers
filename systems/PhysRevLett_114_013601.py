@@ -3,10 +3,10 @@
  
 """Class to simulate the chaotic OM system in Phys. Rev. Lett. **114**, 013601 (2015)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-07-27'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-07-27"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevLett_114_013601']
 
 # dependencies
@@ -49,7 +49,7 @@ class PhysRevLett_114_013601(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevLett_114_013601',
-            desc='Chaotic System in Phys. Rev. Lett. 114, 013601',
+            desc="Chaotic System in Phys. Rev. Lett. 114, 013601",
             num_modes=2,
             cb_update=cb_update
         )
@@ -112,7 +112,7 @@ class PhysRevLett_114_013601(BaseSystem):
         C = 4.0 * self.params['P'] / (self.params['Gamma_norm']**2 + 4.0)
         
         # get coefficients
-        coeffs      = np.zeros(2 * self.num_modes, dtype=np.float_)
+        coeffs      = np.zeros(2 * self.num_modes, dtype=np.float64)
         coeffs[0]   = 4.0 * C**2
         coeffs[1]   = 8.0 * C * self.params['Delta_norm']
         coeffs[2]   = 4.0 * self.params['Delta_norm']**2 + self.params['kappa_norm']**2
@@ -162,10 +162,10 @@ class PhysRevLett_114_013601(BaseSystem):
         """
 
         # initial values of the modes
-        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex128)
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = 0.5
         iv_corrs[1][1]  = 0.5
         iv_corrs[2][2]  = 0.5
@@ -198,7 +198,7 @@ class PhysRevLett_114_013601(BaseSystem):
         dalpha_dt = (1.0j * self.params['Delta_norm'] - self.params['kappa_norm'] / 2.0) * alpha - 2.0j * alpha * np.real(beta) - 1.0j / 2.0
         dbeta_dt = (- 1.0j - self.params['Gamma_norm'] / 2.0) * beta - 1.0j * self.params['P'] / 2.0 * np.conjugate(alpha) * alpha
 
-        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex_)
+        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex128)
 
     def get_modes_steady_state(self, c):
         """Method to obtain the steady state modes.
@@ -224,4 +224,4 @@ class PhysRevLett_114_013601(BaseSystem):
         alpha = - 1.0j / (self.params['kappa_norm'] - 2.0j * (self.params['Delta_norm'] - 2.0 * beta_real))
         beta = - self.params['P'] * N_o * (2.0 + 1.0j * self.params['Gamma_norm']) / (self.params['Gamma_norm']**2 + 4.0)
         
-        return np.array([[alpha, beta]], dtype=np.complex_)
+        return np.array([[alpha, beta]], dtype=np.complex128)

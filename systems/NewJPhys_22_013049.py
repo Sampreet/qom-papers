@@ -3,10 +3,10 @@
  
 """Class to simulate the weakly dissipative OM system in New J. Phys. **22**, 013049 (2020)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-07-27'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-07-27"
+__updated__ = "2025-03-11"
 __all__     = ['NewJPhys_22_013049']
 
 # dependencies
@@ -49,7 +49,7 @@ class NewJPhys_22_013049(BaseSystem):
         super().__init__(
             params=params,
             name='NewJPhys_22_013049',
-            desc='Weakly Dissipative System in New J. Phys. 22, 013049',
+            desc="Weakly Dissipative System in New J. Phys. 22, 013049",
             num_modes=2,
             cb_update=cb_update
         )
@@ -113,7 +113,7 @@ class NewJPhys_22_013049(BaseSystem):
         )
         
         # get coefficients
-        coeffs      = np.zeros(2 * self.num_modes, dtype=np.float_)
+        coeffs      = np.zeros(2 * self.num_modes, dtype=np.float64)
         coeffs[0]   = 4.0 * C**2
         coeffs[1]   = 8.0 * C * Delta_norm
         coeffs[2]   = 4.0 * Delta_norm**2 + kappa_norm**2
@@ -163,7 +163,7 @@ class NewJPhys_22_013049(BaseSystem):
         """
  
         # initial values of the modes
-        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex128)
 
         return iv_modes, None, None
 
@@ -193,7 +193,7 @@ class NewJPhys_22_013049(BaseSystem):
         dbeta_dt = (- 1.0j - self.params['gamma_norm'] / 2.0) * beta + 1.0j * self.params['P'] / 2.0 * np.conjugate(alpha) * alpha
 
         # rearrange per system
-        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex_)
+        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex128)
 
     def get_modes_steady_state(self, c):
         """Method to obtain the steady state modes.
@@ -232,7 +232,7 @@ class NewJPhys_22_013049(BaseSystem):
             # append to list
             Modes.append([alpha, beta])
 
-        return np.array(Modes, dtype=np.complex_)
+        return np.array(Modes, dtype=np.complex128)
 
     def get_params_steady_state(self, c):
         r"""Method to obtain the parameters required to calculate the optical steady states.

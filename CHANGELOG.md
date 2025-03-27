@@ -1,5 +1,10 @@
 # Changelog
 
+## 2025/03/27 - 00 - Version Upgrade
+> Toolbox version 1.1.0
+* Updated all systems to support NumPy 2.x.x.
+* Updated `README`.
+
 ## 2024/06/23 - 00 - Added PT-symmetric System
 > Toolbox version 1.0.2
 * Updated all systems.

@@ -3,10 +3,10 @@
  
 """Class to simulate the PT-symmetric QOM systems in Phys. Rev. A **100**, 063846 (2019)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2023-09-13'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2023-09-13"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevA_100_063846_00', 'PhysRevA_100_063846_01']
 
 # dependencies
@@ -49,7 +49,7 @@ class PhysRevA_100_063846_00(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevA_100_063846_00',
-            desc='Bipartite PT-symmetric QOM system in Phys. Rev. A 100, 063846',
+            desc="Bipartite PT-symmetric QOM system in Phys. Rev. A 100, 063846",
             num_modes=2,
             cb_update=cb_update
         )
@@ -139,7 +139,7 @@ class PhysRevA_100_063846_00(BaseSystem):
         """
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = 0.5 * np.cosh(2.0)
         iv_corrs[0][2]  = 0.5 * np.sinh(2.0)
         iv_corrs[1][1]  = 0.5 * np.cosh(2.0)
@@ -168,7 +168,7 @@ class PhysRevA_100_063846_00(BaseSystem):
         # complex value
         temp = np.sqrt(self.params['J_norm']**2 - 0.25 + 0j)
 
-        return np.array([temp, -temp], dtype=np.complex_)
+        return np.array([temp, -temp], dtype=np.complex128)
 
 class PhysRevA_100_063846_01(BaseSystem):
     r"""Class to simulate the Tripartite PT-symmetric QOM system in Phys. Rev. A **100**, 063846 (2019).
@@ -204,7 +204,7 @@ class PhysRevA_100_063846_01(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevA_100_063846_01',
-            desc='Tripartite PT-symmetric QOM system in Phys. Rev. A 100, 063846',
+            desc="Tripartite PT-symmetric QOM system in Phys. Rev. A 100, 063846",
             num_modes=3,
             cb_update=cb_update
         )
@@ -308,7 +308,7 @@ class PhysRevA_100_063846_01(BaseSystem):
         v_13 = np.exp(- 2.0) / 3.0 - np.exp(2.0) / 3.0
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = 0.5 * v_00
         iv_corrs[0][2]  = 0.5 * v_02
         iv_corrs[0][4]  = 0.5 * v_02

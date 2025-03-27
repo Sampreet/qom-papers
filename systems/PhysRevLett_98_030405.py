@@ -3,10 +3,10 @@
  
 """Class to simulate the moveable end-mirror QOM system in Phys. Rev. Lett. **98**, 030405 (2007)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2022-07-31'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2022-07-31"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevLett_98_030405']
 
 # dependencies
@@ -60,7 +60,7 @@ class PhysRevLett_98_030405(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevLett_98_030405',
-            desc='Moveable End-mirror System in Phys. Rev. Lett. 98, 030405',
+            desc="Moveable End-mirror System in Phys. Rev. Lett. 98, 030405",
             num_modes=2,
             cb_update=cb_update
         )
@@ -178,14 +178,14 @@ class PhysRevLett_98_030405(BaseSystem):
         n_bar       = 0.0 if T == 0.0 else 1.0 / (np.exp(sc.hbar * omega_m / sc.k / T) - 1.0)
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = 0.5 
         iv_corrs[1][1]  = 0.5
         iv_corrs[2][2]  = n_bar + 0.5
         iv_corrs[3][3]  = n_bar + 0.5
         
         # constant parameters
-        c = np.array([Delta, E, G_0, kappa], dtype=np.float_)
+        c = np.array([Delta, E, G_0, kappa], dtype=np.float64)
 
         return None, iv_corrs, c
 
@@ -209,4 +209,4 @@ class PhysRevLett_98_030405(BaseSystem):
         return np.array([[
             np.abs(E / (kappa + 1.0j * Delta)),
             1.0
-        ]], dtype=np.complex_)
+        ]], dtype=np.complex128)

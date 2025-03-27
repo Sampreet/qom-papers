@@ -3,10 +3,10 @@
  
 """Module to simulate the N-cell OM array system in Phys. Rev. Lett. **119**, 153901 (2017)."""
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-08-09'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-08-09"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevLett_119_153901']
 
 # dependencies
@@ -57,7 +57,7 @@ class PhysRevLett_119_153901(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevLett_119_153901',
-            desc='Array System in Phys. Rev. Lett. 119, 153901',
+            desc="Array System in Phys. Rev. Lett. 119, 153901",
             num_modes=2 * params.get('N', self.system_defaults['N']),
             cb_update=cb_update
         )
@@ -118,7 +118,7 @@ class PhysRevLett_119_153901(BaseSystem):
         default = 1e3 - 2.5e3 * gauss(xs, 0, 0.1) + 7.5e3 * gauss(xs, 0, 0.05)
 
         # initial values of the modes
-        iv_modes        = np.zeros(2 * N, dtype=np.complex_)
+        iv_modes        = np.zeros(2 * N, dtype=np.complex128)
         iv_modes[::2]   = {
             'Gaussian'  : R * (c_1 + c_2 * np.exp(- c_3 * ys**2)),
             'Lorentzian': R * c_2 / (c_1 + c_3 * ys**2)**2,
@@ -155,7 +155,7 @@ class PhysRevLett_119_153901(BaseSystem):
         divisor = np.abs(J) / self.params['x_d']**2
 
         # initialize mode rates
-        mode_rates = np.zeros_like(modes, dtype=np.complex_)
+        mode_rates = np.zeros_like(modes, dtype=np.complex128)
 
         # update rates for optical modes
         for i in range(len(alphas)):
@@ -188,7 +188,7 @@ class PhysRevLett_119_153901(BaseSystem):
         divisor = np.abs(J) / self.params['x_d']**2
 
         # return coefficients
-        return np.array([0.0, 0.0, - 1.0j * J / 2.0 * 1.0**2 / divisor], dtype=np.complex_)
+        return np.array([0.0, 0.0, - 1.0j * J / 2.0 * 1.0**2 / divisor], dtype=np.complex128)
 
     def get_nonlinearities(self, modes, c, t):
         """Method to get the nonlinearities.

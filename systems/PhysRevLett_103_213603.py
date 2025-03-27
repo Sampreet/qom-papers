@@ -26,10 +26,10 @@ J. Eisert       Institute of Advanced Study Berlin, D-14193 Berlin, Germany
 * High degrees of squeezing below the vacuum noise level.
 """
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-05-16'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-05-16"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevLett_103_213603']
 
 # dependencies
@@ -81,7 +81,7 @@ class PhysRevLett_103_213603(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevLett_103_213603',
-            desc='Modulated System in Phys. Rev. Lett. 103, 213603',
+            desc="Modulated System in Phys. Rev. Lett. 103, 213603",
             num_modes=2,
             cb_update=cb_update
         )
@@ -223,17 +223,17 @@ class PhysRevLett_103_213603(BaseSystem):
         E_1 = np.sqrt(2 * kappa * P_1 / (sc.hbar * omega_l))
  
         # initial values of the modes
-        iv_modes = np.zeros(self.num_modes, dtype=np.complex_)
+        iv_modes = np.zeros(self.num_modes, dtype=np.complex128)
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = 0.5 
         iv_corrs[1][1]  = 0.5
         iv_corrs[2][2]  = n_th + 0.5
         iv_corrs[3][3]  = n_th + 0.5
         
         # derived constants
-        c = np.array([Delta_0, E_0, E_1, G_0, gamma_m, kappa, Omega, n_th], dtype=np.float_)
+        c = np.array([Delta_0, E_0, E_1, G_0, gamma_m, kappa, Omega, n_th], dtype=np.float64)
 
         return iv_modes, iv_corrs, c
 
@@ -270,4 +270,4 @@ class PhysRevLett_103_213603(BaseSystem):
         dbeta_dt = (1j * G * np.conjugate(alpha) / 2 - (gamma_m + 1j * self.params['omega_m']) * beta)
 
         # arrange rates, normalize and return
-        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex_) * tau
+        return np.array([dalpha_dt, dbeta_dt], dtype=np.complex128) * tau

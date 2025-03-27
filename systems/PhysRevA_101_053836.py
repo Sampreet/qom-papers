@@ -31,10 +31,10 @@ H.-F. Wang      Department of Physics, College of Science, Yanbian University, Y
 * Robust against mechanical thermal noises and survives at high bath temperatures.
 """
 
-__authors__ = ['Sampreet Kalita']
-__toolbox__ = 'qom-v1.0.2'
-__created__ = '2021-10-22'
-__updated__ = '2024-06-23'
+__authors__ = ["Sampreet Kalita"]
+__toolbox__ = "qom-v1.1.0"
+__created__ = "2021-10-22"
+__updated__ = "2025-03-11"
 __all__     = ['PhysRevA_101_053836']
 
 # dependencies
@@ -83,7 +83,7 @@ class PhysRevA_101_053836(BaseSystem):
         super().__init__(
             params=params,
             name='PhysRevA_101_053836',
-            desc='Single-tone Modulated System in Phys. Rev. A 101, 053836',
+            desc="Single-tone Modulated System in Phys. Rev. A 101, 053836",
             num_modes=2,
             cb_update=cb_update
         )
@@ -202,7 +202,7 @@ class PhysRevA_101_053836(BaseSystem):
         n_a, n_m    = self.params['ns']
 
         # initial values of the correlations
-        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float_)
+        iv_corrs        = np.zeros(self.dim_corrs, dtype=np.float64)
         iv_corrs[0][0]  = n_a + 0.5 
         iv_corrs[1][1]  = n_a + 0.5
         iv_corrs[2][2]  = n_m + 0.5
